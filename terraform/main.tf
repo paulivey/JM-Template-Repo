@@ -20,8 +20,7 @@ resource "azurerm_resource_group" "rg" {
 
 # Create app service web app + service plan
 module "create_app" {
-  #TODO: Set to GH repo, using tags/releases for versioning
-  source = "../modules/web_app_linux"
+  source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/web_app_linux?ref=main"
 
   # Make sure the resource group exists first
   depends_on = [
@@ -40,8 +39,7 @@ module "create_app" {
 
 # Enable private endpoint
 module "enable_private_endpoint" {
-  # TODO: Set to GH repo, using tags/releases for versioning
-  source = "../modules/private_endpoint"
+  source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/private_endpoint?ref=main"
 
   # Input variables
   pvt_endpoint_name = "PE-${upper(var.environment)}-${upper(var.project)}-${upper(var.region_short)}-${upper(var.app_name)}-${var.app_suffix}"
@@ -52,8 +50,7 @@ module "enable_private_endpoint" {
 
 # Enable vNet integration
 module "enable_vnet_integration" {
-  # TODO: Set to GH repo, using tags/releases for versioning
-  source = "../modules/vnet_integration"
+  source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/vnet_integration?ref=main"
 
   depends_on = [
     module.enable_private_endpoint
@@ -70,8 +67,7 @@ module "enable_vnet_integration" {
 
 # Create storage account
 module "create_storage_account" {
-  # TODO: Set to GH repo, using tags/releases for versioning
-  source = "../modules/storage_account"
+  source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/storage_account?ref=main"
 
   depends_on = [
     azurerm_resource_group.rg
@@ -84,8 +80,7 @@ module "create_storage_account" {
 
 # Create storage container
 module "create_storage_container" {
-  # TODO: Set to GH repo, using tags/releases for versioning
-  source = "../modules/storage_container"
+  source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/storage_container?ref=main"
 
   depends_on = [
     module.create_storage_account
@@ -98,8 +93,7 @@ module "create_storage_container" {
 
 # Create storage share
 module "create_storage_share" {
-  # TODO: Set to GH repo, using tags/releases for versioning
-  source = "../modules/storage_share"
+  source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/storage_share?ref=main"
 
   depends_on = [
     module.create_storage_account

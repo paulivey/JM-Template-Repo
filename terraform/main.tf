@@ -59,7 +59,7 @@ module "enable_vnet_integration" {
   # Input variables
   nsg_name                = "NSG-${upper(var.environment)}-${upper(var.project)}-VI-${upper(var.app_name)}-${upper(var.region_short)}-${var.app_suffix}"
   subnet_name             = "SNET-${upper(var.environment)}-${upper(var.project)}-VI-${upper(var.app_name)}-${upper(var.region_short)}-${var.app_suffix}"
-  address_prefixes        = ["10.0.2.0/26"]
+  address_prefixes        = ["10.1.0.64/26"]
   svc_delegation_name     = "Microsoft.Web/serverFarms"
   web_app_rg_name         = azurerm_resource_group.rg.name
   web_app_name            = var.app_name

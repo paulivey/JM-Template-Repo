@@ -1,1 +1,36 @@
 name: Test IaC
+
+on:
+  workflow_dispatch:
+
+env:
+  ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
+  ARM_TENANT_ID: ${{ secrets.TENANT_ID }}
+  ARM_CLIENT_ID: ${{ secrets.CLIENT_ID }}
+  ARM_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+
+jobs:
+  deploy-test-infra:
+    name: Deploy test infra
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: terraform
+    
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1.2.1
+        with:
+          terraform_wrapper: false
+          
+      - name: Terraform Init
+        run: terraform init
+      
+      - name: Terraform Plan
+        run: terraform plan -out="tfplan.bin" -var-file="sandbox.tfvars" -input=false
+      
+      - name: Terraform Apply
+        run: terraform apply -auto-approve "tfplan.bin"

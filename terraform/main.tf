@@ -20,8 +20,7 @@ resource "azurerm_resource_group" "rg" {
 
 # Create app service web app + service plan
 module "create_app" {
-  #TODO: Set to GH repo, using tags/releases for versioning
-  source = "git::https://github.com/iveylabs/JM-TF-Modules.git/modules/web_app_linux?ref=main"
+  source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/web_app_linux?ref=main"
 
   # Make sure the resource group exists first
   depends_on = [
@@ -38,74 +37,69 @@ module "create_app" {
   }
 }
 
-# # Enable private endpoint
-# module "enable_private_endpoint" {
-#   # TODO: Set to GH repo, using tags/releases for versioning
-#   source = "../modules/private_endpoint"
+# Enable private endpoint
+module "enable_private_endpoint" {
+  source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/private_endpoint?ref=main"
 
-#   # Input variables
-#   pvt_endpoint_name = "PE-${upper(var.environment)}-${upper(var.project)}-${upper(var.region_short)}-${upper(var.app_name)}-${var.app_suffix}"
-#   app_name          = var.app_name
-#   resource_id       = module.create_app.web_app_id
-#   subresource_names = [ "sites" ]
-# }
+  # Input variables
+  pvt_endpoint_name = "PE-${upper(var.environment)}-${upper(var.project)}-${upper(var.region_short)}-${upper(var.app_name)}-${var.app_suffix}"
+  app_name          = var.app_name
+  resource_id       = module.create_app.web_app_id
+  subresource_names = [ "sites" ]
+}
 
-# # Enable vNet integration
-# module "enable_vnet_integration" {
-#   # TODO: Set to GH repo, using tags/releases for versioning
-#   source = "../modules/vnet_integration"
+# Enable vNet integration
+module "enable_vnet_integration" {
+  source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/vnet_integration?ref=main"
 
-#   depends_on = [
-#     module.enable_private_endpoint
-#   ]
+  depends_on = [
+    module.enable_private_endpoint
+  ]
 
-#   # Input variables
-#   nsg_name                = "NSG-${upper(var.environment)}-${upper(var.project)}-VI-${upper(var.app_name)}-${upper(var.region_short)}-${var.app_suffix}"
-#   subnet_name             = "SNET-${upper(var.environment)}-${upper(var.project)}-VI-${upper(var.app_name)}-${upper(var.region_short)}-${var.app_suffix}"
-#   address_prefixes        = ["10.0.2.0/26"]
-#   svc_delegation_name     = "Microsoft.Web/serverFarms"
-#   web_app_rg_name         = azurerm_resource_group.rg.name
-#   web_app_name            = var.app_name
-# }
+  # Input variables
+  nsg_name                = "NSG-${upper(var.environment)}-${upper(var.project)}-VI-${upper(var.app_name)}-${upper(var.region_short)}-${var.app_suffix}"
+  subnet_name             = "SNET-${upper(var.environment)}-${upper(var.project)}-VI-${upper(var.app_name)}-${upper(var.region_short)}-${var.app_suffix}"
+  address_prefixes        = ["10.0.2.0/26"]
+  svc_delegation_name     = "Microsoft.Web/serverFarms"
+  web_app_rg_name         = azurerm_resource_group.rg.name
+  web_app_name            = var.app_name
+}
 
-# # Create storage account
-# module "create_storage_account" {
-#   # TODO: Set to GH repo, using tags/releases for versioning
-#   source = "../modules/storage_account"
+# Create storage account
+module "create_storage_account" {
+  source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/storage_account?ref=main"
 
-#   depends_on = [
-#     azurerm_resource_group.rg
-#   ]
+  depends_on = [
+    azurerm_resource_group.rg
+  ]
 
-#   # Input variables
-#   sta_rg_name = azurerm_resource_group.rg.name
-#   sta_name    = "${lower(var.app_name)}"
-# }
+  # Input variables
+  sta_rg_name = azurerm_resource_group.rg.name
+  sta_name    = "${lower(var.app_name)}"
+}
 
-# # Create storage container
-# module "create_storage_container" {
-#   # TODO: Set to GH repo, using tags/releases for versioning
-#   source = "../modules/storage_container"
+# Create storage container
+module "create_storage_container" {
+  source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/storage_container?ref=main"
 
-#   depends_on = [
-#     module.create_storage_account
-#   ]
+  depends_on = [
+    module.create_storage_account
+  ]
 
-#   # Input variables
-#   sta_name       = "${lower(var.app_name)}"
-#   container_name = "mycontainer"
-# }
+  # Input variables
+  sta_name       = "${lower(var.app_name)}"
+  container_name = "mycontainer"
+}
 
-# # Create storage share
-# module "create_storage_share" {
-#   # TODO: Set to GH repo, using tags/releases for versioning
-#   source = "../modules/storage_share"
+# Create storage share
+module "create_storage_share" {
+  source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/storage_share?ref=main"
 
-#   depends_on = [
-#     module.create_storage_account
-#   ]
+  depends_on = [
+    module.create_storage_account
+  ]
 
-#   # Input variables
-#   sta_name   = "${lower(var.app_name)}"
-#   share_name = "myshare"
-# }
+  # Input variables
+  sta_name   = "${lower(var.app_name)}"
+  share_name = "myshare"
+}

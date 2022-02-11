@@ -25,6 +25,13 @@ jobs:
         uses: hashicorp/setup-terraform@v1.2.1
         with:
           terraform_wrapper: false
+      
+      - name: Git Setup
+        run: |
+          git config --local --remove-section http."https://github.com/"
+          git config --global url."https://foo:${{ secrets.PAT_PUBLIC_REPO }}@github.com/iveylabs".insteadOf "https://github.com/iveylabs"
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
           
       - name: Terraform Init
         run: terraform init

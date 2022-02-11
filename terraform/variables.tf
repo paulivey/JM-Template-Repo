@@ -21,3 +21,7 @@ variable "region_short"  {
 variable "app_suffix"  {
     type    = string
 }
+
+variable "address_prefixes" {
+    type    = list(string)
+}

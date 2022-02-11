@@ -1,11 +1,13 @@
-app_name = "bluehydrogenabacus"
+app_name            = "bluehydrogenabacus"
 
-location = "northeurope"
+location            = "northeurope"
 
-environment = "SBX"
+environment         = "SBX"
 
-project = "DSOPS"
+project             = "DSOPS"
 
-region_short = "EU"
+region_short        = "EU"
 
-app_suffix = "001"
+app_suffix          = "001"
+
+address_prefixes    = ["10.1.0.64/26"]

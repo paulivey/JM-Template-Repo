@@ -9,7 +9,7 @@ env:
   ARM_CLIENT_ID: ${{ secrets.CLIENT_ID }}
   ARM_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
 
-jobs:
+jobs:  
   deploy-test-infra:
     name: Deploy test infra
     runs-on: ubuntu-latest

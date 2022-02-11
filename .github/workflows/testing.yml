@@ -10,34 +10,45 @@ env:
   ARM_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
 
 jobs:  
-  deploy-test-infra:
-    name: Deploy test infra
+  testing:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: terraform
-    
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v2
-      
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1.2.1
+      - name: Azure CLI Action
+        uses: Azure/cli@v1
         with:
-          terraform_wrapper: false
-      
-      - name: Git Setup
-        run: |
-          git config --local --remove-section http."https://github.com/"
-          git config --global url."https://foo:${{ env.GH_TOKEN }}@github.com/iveylabs".insteadOf "https://github.com/iveylabs"
-        env:
-          GH_TOKEN: ${{ secrets.PAT_PUBLIC_REPO }}
+          # Specify the script here
+          inlineScript: |
+            az login --service-principal -u ${{ secrets.CLIENT_ID }} -p ${{ secrets.CLIENT_SECRET }} --tenant ${{ secrets.TENANT_ID }}
+            az policy assignment show --name "23c732f5d7904099bb1f1d18" --query notScopes[]
           
-      - name: Terraform Init
-        run: terraform init
-      
-      - name: Terraform Plan
-        run: terraform plan -out="tfplan.bin" -var-file="sandbox.tfvars" -input=false
-      
-      - name: Terraform Apply
-        run: terraform apply -auto-approve "tfplan.bin"
+#  deploy-test-infra:
+#    name: Deploy test infra
+#    runs-on: ubuntu-latest
+#    defaults:
+#      run:
+#        working-directory: terraform
+#    
+#   steps:
+#      - name: Checkout repo
+#        uses: actions/checkout@v2
+#      
+#      - name: Setup Terraform
+#        uses: hashicorp/setup-terraform@v1.2.1
+#        with:
+#          terraform_wrapper: false
+#      
+#      - name: Git Setup
+#        run: |
+#          git config --local --remove-section http."https://github.com/"
+#          git config --global url."https://foo:${{ env.GH_TOKEN }}@github.com/iveylabs".insteadOf "https://github.com/iveylabs"
+#        env:
+#          GH_TOKEN: ${{ secrets.PAT_PUBLIC_REPO }}
+#          
+#      - name: Terraform Init
+#        run: terraform init
+#      
+#      - name: Terraform Plan
+#        run: terraform plan -out="tfplan.bin" -var-file="sandbox.tfvars" -input=false
+#      
+#      - name: Terraform Apply
+#        run: terraform apply -auto-approve "tfplan.bin"

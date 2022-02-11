@@ -29,7 +29,7 @@ jobs:
       - name: Git Setup
         run: |
           git config --local --remove-section http."https://github.com/"
-          git config --global url."https://foo:${{ secrets.PAT_PUBLIC_REPO }}@github.com/iveylabs".insteadOf "https://github.com/iveylabs"
+          git config --global url."https://foo:${{ env.GH_TOKEN }}@github.com/iveylabs".insteadOf "https://github.com/iveylabs"
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           

@@ -72,10 +72,6 @@ module "create_app" {
 module "enable_private_endpoint" {
   source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/private_endpoint?ref=main"
 
-  depends_on = [
-    module.create_app
-  ]
-
   # Input variables
   pvt_endpoint_name = "PE-${upper(var.environment)}-${upper(var.project)}-${upper(var.region_short)}-${upper(var.app_name)}-${var.app_suffix}"
   app_name          = var.app_name

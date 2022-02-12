@@ -10,12 +10,6 @@ terraform {
     container_name       = "terraform"
     key                  = "green-testing.terraform.tfstate"
   }
-#  required_providers {
-#    azurerm = {
-#      source = "hashicorp/azurerm"
-#      configuration_aliases = [ azurerm.root ]
-#     }
-#  }
 }
 
 # Create new resource group
@@ -23,7 +17,17 @@ resource "azurerm_resource_group" "rg" {
   name     = "RG-${upper(var.environment)}-${upper(var.project)}-${upper(var.region_short)}-${upper(var.app_name)}-${var.app_suffix}"
   location = var.location
 
-  tags = var.tags
+  tags = {
+    "Country" = "${var.tag_country}"
+    "Environment" = "${var.tag_environment}"
+    "Maintenance Window" = "${var.tag_window}"
+    "Business Sector" = "${var.tag_sector}"
+    "Application Name" = "${var.tag_app_name}"
+    "Cost Center" = "${var.tag_cost_center}"
+    "Application Owner" = "${var.tag_app_owner}"
+    "Data Classification" = "${var.tag_classification}"
+    "Service Class" = "${var.tag_class}"
+  }
 }
 
 # Set up Azure Policy assignment on the resource group
@@ -51,7 +55,7 @@ module "create_app" {
   source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/web_app_linux?ref=main"
   
   depends_on = [
-    azurerm_resource_group.rg
+    module.policy_assignment
   ]
 
   # Input variables
@@ -67,6 +71,10 @@ module "create_app" {
 # Enable private endpoint
 module "enable_private_endpoint" {
   source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/private_endpoint?ref=main"
+
+  depends_on = [
+    module.create_app
+  ]
 
   # Input variables
   pvt_endpoint_name = "PE-${upper(var.environment)}-${upper(var.project)}-${upper(var.region_short)}-${upper(var.app_name)}-${var.app_suffix}"
@@ -97,7 +105,7 @@ module "create_storage_account" {
   source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/storage_account?ref=main"
 
   depends_on = [
-    azurerm_resource_group.rg
+    module.policy_assignment
   ]
 
   # Input variables

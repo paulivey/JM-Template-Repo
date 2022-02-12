@@ -65,18 +65,3 @@ variable "tag_classification" {
 variable "tag_class" {
     type    = string
 }
-
-variable "tags" {
-    type    = map(string)
-    default = {
-        "Country" = "${var.tag_country}"
-        "Environment" = "${var.tag_environment}"
-        "Maintenance Window" = "${var.tag_window}"
-        "Business Sector" = "${var.tag_sector}"
-        "Application Name" = "${var.tag_app_name}"
-        "Cost Center" = "${var.tag_cost_center}"
-        "Application Owner" = "${var.tag_app_owner}"
-        "Data Classification" = "${var.tag_classification}"
-        "Service Class" = "${var.tag_class}"
-    }
-}

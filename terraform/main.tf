@@ -23,17 +23,7 @@ resource "azurerm_resource_group" "rg" {
   name     = "RG-${upper(var.environment)}-${upper(var.project)}-${upper(var.region_short)}-${upper(var.app_name)}-${var.app_suffix}"
   location = var.location
 
-  tags = {
-    "Country" = "${var.tag_country}"
-    "Environment" = "${var.tag_environment}"
-    "Maintenance Window" = "${var.tag_window}"
-    "Business Sector" = "${var.tag_sector}"
-    "Application Name" = "${var.tag_app_name}"
-    "Cost Center" = "${var.tag_cost_center}"
-    "Application Owner" = "${var.tag_app_owner}"
-    "Data Classification" = "${var.tag_classification}"
-    "Service Class" = "${var.tag_class}"
-  }
+  tags = var.tags
 }
 
 # Set up Azure Policy assignment on the resource group

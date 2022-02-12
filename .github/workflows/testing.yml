@@ -8,6 +8,7 @@ env:
   ARM_TENANT_ID: ${{ secrets.TENANT_ID }}
   ARM_CLIENT_ID: ${{ secrets.CLIENT_ID }}
   ARM_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+  AZURE_LOCATION: "northeurope"
   APP_NAME: "BLUEHYDROGENABACUS"
   ENVIRONMENT: "SBX"
   PROJECT: "DSOPS"
@@ -23,49 +24,48 @@ jobs:
        working-directory: terraform
    
    steps:
-     - name: Checkout repo
-       uses: actions/checkout@v2
+   
+    - name: Azure Login
+      uses: Azure/login@v1.4.3
+      with:
+        creds: ${{ secrets.AZURE_CREDS }}
+        enable-AzPSSession: true
+   
+    - name: Create resource group
+      run: New-AzResourceGroup -Name "RG-${{ env.ENVIRONMENT }}-${{ env.PROJECT }}-${{ env.REGION_SHORT }}-${{ env.APP_NAME }}-${{ env.APP_SUFFIX }}" -Location ${{ env.AZURE_LOCATION }}
+    
+    - name: Exclude RG from sub tagging policy
+      uses: Azure/powershell@v1
+      with:
+        inlineScript: |
+          # Get current notScopes list
+          $currentNotScopes = (Get-AzPolicyAssignment -Name "${{ secrets.AZ_POLICY_ASSIGNMENT_NAME }}").Properties.NotScopes
+          # Add new RG to NotScopes of assignment
+          $newNotScopes = $currentNotScopes + "/subscriptions/${{ secrets.SUBSCRIPTION_ID }}/resourceGroups/RG-${{ env.ENVIRONMENT }}-${{ env.PROJECT }}-${{ env.REGION_SHORT }}-${{ env.APP_NAME }}-${{ env.APP_SUFFIX }}"
+          # Modify assignment with new NotScopes
+          Set-AzPolicyAssignment -Name "${{ secrets.AZ_POLICY_ASSIGNMENT_NAME }}" -NotScope $newNotScopes
+        azPSVersion: latest
+    
+    - name: Checkout repo
+      uses: actions/checkout@v2
 
-     - name: Setup Terraform
-       uses: hashicorp/setup-terraform@v1.2.1
-       with:
-         terraform_wrapper: false
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1.2.1
+      with:
+        terraform_wrapper: false
 
-     - name: Git Setup
-       run: |
-         git config --local --remove-section http."https://github.com/"
-         git config --global url."https://foo:${{ env.GH_TOKEN }}@github.com/iveylabs".insteadOf "https://github.com/iveylabs"
-       env:
-         GH_TOKEN: ${{ secrets.PAT_PUBLIC_REPO }}
+    - name: Git Setup
+      run: |
+        git config --local --remove-section http."https://github.com/"
+        git config --global url."https://foo:${{ env.GH_TOKEN }}@github.com/iveylabs".insteadOf "https://github.com/iveylabs"
+      env:
+        GH_TOKEN: ${{ secrets.PAT_PUBLIC_REPO }}
 
-     - name: Terraform Init
-       run: terraform init
+    - name: Terraform Init
+      run: terraform init
 
-     - name: Terraform Plan
-       run: terraform plan -out="tfplan.bin" -var-file="sandbox.tfvars" -input=false
+    - name: Terraform Plan
+      run: terraform plan -out="tfplan.bin" -var-file="sandbox.tfvars" -input=false
 
-     - name: Terraform Apply
-       run: terraform apply -auto-approve "tfplan.bin"
-
-  policy-exclude:
-    name: Azure policy exclusion
-    needs: deploy-test-infra
-    runs-on: ubuntu-latest
-    steps:
-      - name: Azure Login
-        uses: Azure/login@v1.4.3
-        with:
-          creds: ${{ secrets.AZURE_CREDS }}
-          enable-AzPSSession: true
-
-      - name: Exclude RG from sub tagging policy
-        uses: Azure/powershell@v1
-        with:
-          inlineScript: |
-            # Get current notScopes list
-            $currentNotScopes = (Get-AzPolicyAssignment -Name "${{ secrets.AZ_POLICY_ASSIGNMENT_NAME }}").Properties.NotScopes
-            # Add new RG to NotScopes of assignment
-            $newNotScopes = $currentNotScopes + "/subscriptions/${{ secrets.SUBSCRIPTION_ID }}/resourceGroups/RG-${{ env.ENVIRONMENT }}-${{ env.PROJECT }}-${{ env.REGION_SHORT }}-${{ env.APP_NAME }}-${{ env.APP_SUFFIX }}"
-            # Modify assignment with new NotScopes
-            Set-AzPolicyAssignment -Name "${{ secrets.AZ_POLICY_ASSIGNMENT_NAME }}" -NotScope $newNotScopes
-          azPSVersion: latest
+    - name: Terraform Apply
+      run: terraform apply -auto-approve "tfplan.bin"

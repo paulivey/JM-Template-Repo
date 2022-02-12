@@ -13,13 +13,25 @@ jobs:
   testing:
     runs-on: ubuntu-latest
     steps:
-      - name: Azure CLI Action
-        uses: Azure/cli@v1
+      - name: Azure Login
+        uses: Azure/login@v1.4.3
         with:
-          # Specify the script here
+          creds: ${{ secrets.AZURE_CREDS }}
+          enable-AzPSSession: true
+      
+      - name: Exclude RG from policy
+        uses: Azure/powershell@v1
+        with:
           inlineScript: |
-            az login --service-principal -u ${{ secrets.CLIENT_ID }} -p ${{ secrets.CLIENT_SECRET }} --tenant ${{ secrets.TENANT_ID }}
-            az policy assignment show --name "23c732f5d7904099bb1f1d18" --query notScopes[]
+            # Get current notScopes list
+            $currentNotScopes = (Get-AzPolicyAssignment -Name "${{ secrets.AZ_POLICY_ASSIGNMENT_NAME }}").Properties.NotScopes
+            # Create ArrayList for newNotScopes
+            $newNotScopes = New-Object -TypeName 'System.Collections.ArrayList'
+            # Add currentNotScopes to ArrayList
+            $newNotScopes.Add($currentNotScopes)
+            # Add new RG to NotScopes of assignment
+            $newNoScopes.Add("/subscriptions/${{ secrets.SUBSCRIPTION_ID }}/resourceGroups/RG-TAG-TEST-1")
+          azPSVersion: latest
           
 #  deploy-test-infra:
 #    name: Deploy test infra

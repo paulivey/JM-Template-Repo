@@ -10,6 +10,12 @@ terraform {
     container_name       = "terraform"
     key                  = "green-testing.terraform.tfstate"
   }
+  required_providers {
+    azurerm = {
+      source = "hashicorp/azurerm"
+      configuration_aliases = [ azurerm.root ]
+     }
+  }
 }
 
 # Create new resource group

@@ -25,12 +25,8 @@ jobs:
           inlineScript: |
             # Get current notScopes list
             $currentNotScopes = (Get-AzPolicyAssignment -Name "${{ secrets.AZ_POLICY_ASSIGNMENT_NAME }}").Properties.NotScopes
-            # Create ArrayList for newNotScopes
-            $newNotScopes = New-Object -TypeName 'System.Collections.ArrayList'
-            # Add currentNotScopes to ArrayList
-            $newNotScopes.Add($currentNotScopes)
             # Add new RG to NotScopes of assignment
-            $newNotScopes.Add("/subscriptions/${{ secrets.SUBSCRIPTION_ID }}/resourceGroups/RG-TAG-TEST-1")
+            $newNotScopes = $currentNotScopes + "/subscriptions/${{ secrets.SUBSCRIPTION_ID }}/resourceGroups/RG-TAG-TEST-1"
             # Modify assignment with new NotScopes
             Set-AzPolicyAssignment -Name "${{ secrets.AZ_POLICY_ASSIGNMENT_NAME }}" -NotScope $newNotScopes
           azPSVersion: latest

@@ -16,20 +16,43 @@ terraform {
 resource "azurerm_resource_group" "rg" {
   name     = "RG-${upper(var.environment)}-${upper(var.project)}-${upper(var.region_short)}-${upper(var.app_name)}-${var.app_suffix}"
   location = var.location
+
+  tags = {
+    "Country" = "${var.tag_country}"
+    "Environment" = "${var.tag_environment}"
+    "Maintenance Window" = "${var.tag_window}"
+    "Business Sector" = "${var.tag_sector}"
+    "Application Name" = "${var.tag_app_name}"
+    "Cost Center" = "${var.tag_cost_center}"
+    "Application Owner" = "${var.tag_app_owner}"
+    "Data Classification" = "${var.tag_classification}"
+    "Service Class" = "${var.tag_class}"
+  }
+}
+
+# Set up Azure Policy assignment on the resource group
+module "policy_assignment" {
+  source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/azure_policy_rg_assignment?ref=main"
+
+  resource_group_name = azurerm_resource_group.rg.name
+  tag_country         = var.tag_country
+  tag_environment     = var.tag_environment
+  tag_window          = var.tag_window
+  tag_sector          = var.tag_sector
+  tag_app_name        = var.tag_app_name
+  tag_cost_center     = var.tag_cost_center
+  tag_app_owner       = var.tag_app_owner
+  tag_classification  = var.tag_classification
+  tag_class           = var.tag_class
 }
 
 # Create app service web app + service plan
 module "create_app" {
   source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/web_app_linux?ref=main"
 
-  # Make sure the resource group exists first
-  depends_on = [
-    azurerm_resource_group.rg
-  ]
-
   # Input variables
   app_name     = var.app_name
-  app_rg_name  = "RG-${upper(var.environment)}-${upper(var.project)}-${upper(var.region_short)}-${upper(var.app_name)}-${var.app_suffix}"
+  app_rg_name  = azurerm_resource_group.rg.name
   asp_name     = "app-svcplan-${lower(var.project)}-${lower(var.region_short)}-${lower(var.app_name)}"
   app_settings = {
     "SCM_DO_BUILD_DURING_DEPLOYMENT" = "1"
@@ -68,10 +91,6 @@ module "enable_vnet_integration" {
 # Create storage account
 module "create_storage_account" {
   source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/storage_account?ref=main"
-
-  depends_on = [
-    azurerm_resource_group.rg
-  ]
 
   # Input variables
   sta_rg_name = azurerm_resource_group.rg.name

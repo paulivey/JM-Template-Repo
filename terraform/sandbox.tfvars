@@ -1,13 +1,17 @@
-app_name            = "bluehydrogenabacus"
-
-location            = "northeurope"
-
-environment         = "SBX"
-
-project             = "DSOPS"
-
-region_short        = "EU"
-
-app_suffix          = "001"
-
-address_prefixes    = ["10.1.0.64/26"]
+app_name             = "bluehydrogenabacus"
+location             = "northeurope"
+environment          = "SBX"
+project              = "DSOPS"
+region_short         = "EU"
+app_suffix           = "001"
+address_prefixes     = ["10.1.0.64/26"]
+policy_definition_id = "/subscriptions/51b103e0-dc65-494c-8317-bd312197bbb2/providers/Microsoft.Authorization/policyDefinitions/8a9bf092-d5fd-4dde-9412-dcb2852ed09f"
+tag_country          = "UK"
+tag_environment      = "SBX-DSOPS-EMEA"
+tag_window           = "NOT REQUIRED"
+tag_sector           = "NONE"
+tag_app_name         = "${upper(var.app_name)}"
+tag_cost_center      = "00001"
+tag_app_owner        = "PAUL IVEY"
+tag_classification   = "INTERNAL"
+tag_class            = "PLATINUM"

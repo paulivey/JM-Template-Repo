@@ -34,6 +34,10 @@ resource "azurerm_resource_group" "rg" {
 module "policy_assignment" {
   source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/azure_policy_rg_assignment?ref=main"
 
+  depends_on = [
+    azurerm_resource_group.rg
+  ]
+
   resource_group_name = azurerm_resource_group.rg.name
   tag_country         = var.tag_country
   tag_environment     = var.tag_environment
@@ -49,6 +53,10 @@ module "policy_assignment" {
 # Create app service web app + service plan
 module "create_app" {
   source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/web_app_linux?ref=main"
+  
+  depends_on = [
+    azurerm_resource_group.rg
+  ]
 
   # Input variables
   app_name     = var.app_name
@@ -91,6 +99,10 @@ module "enable_vnet_integration" {
 # Create storage account
 module "create_storage_account" {
   source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/storage_account?ref=main"
+
+  depends_on = [
+    azurerm_resource_group.rg
+  ]
 
   # Input variables
   sta_rg_name = azurerm_resource_group.rg.name

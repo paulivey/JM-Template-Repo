@@ -30,7 +30,9 @@ jobs:
             # Add currentNotScopes to ArrayList
             $newNotScopes.Add($currentNotScopes)
             # Add new RG to NotScopes of assignment
-            $newNoScopes.Add("/subscriptions/${{ secrets.SUBSCRIPTION_ID }}/resourceGroups/RG-TAG-TEST-1")
+            $newNotScopes.Add("/subscriptions/${{ secrets.SUBSCRIPTION_ID }}/resourceGroups/RG-TAG-TEST-1")
+            # Modify assignment with new NotScopes
+            Set-AzPolicyAssignment -Name "${{ secrets.AZ_POLICY_ASSIGNMENT_NAME }}" -NotScope $newNotScopes
           azPSVersion: latest
           
 #  deploy-test-infra:

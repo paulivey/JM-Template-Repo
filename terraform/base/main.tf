@@ -102,7 +102,7 @@ module "create_storage_account" {
   source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/storage_account?ref=main"
 
   depends_on = [
-    module.policy_assignment
+    module.create_resource_group
   ]
 
   # Input variables
@@ -135,24 +135,4 @@ module "create_storage_share" {
   # Input variables
   sta_name   = "${lower(var.app_name)}"
   share_name = "myshare"
-}
-
-# Set up Azure Policy assignment on the resource group
-module "policy_assignment" {
-  source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/azure_policy_rg_assignment?ref=main"
-
-  depends_on = [
-    azurerm_resource_group.rg
-  ]
-
-  resource_group_name = azurerm_resource_group.rg.name
-  tag_country         = var.tag_country
-  tag_environment     = var.tag_environment
-  tag_window          = var.tag_window
-  tag_sector          = var.tag_sector
-  tag_app_name        = var.tag_app_name
-  tag_cost_center     = var.tag_cost_center
-  tag_app_owner       = var.tag_app_owner
-  tag_classification  = var.tag_classification
-  tag_class           = var.tag_class
 }

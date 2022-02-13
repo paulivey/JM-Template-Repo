@@ -62,12 +62,12 @@ jobs:
 
     # Apply if that was the selected option
     - name: Terraform apply
-      run: terraform apply -var-file="${{ github.event.inputs.gh-env }}.tfvars" -input=false -auto-approve "tfplan.bin"
+      run: terraform apply -input=false -auto-approve "tfplan.bin"
       if: ${{ github.event.inputs.action == 'Apply' }}
       
     # Destroy if that was the selected option
     - name: Terraform destroy
-      run: terraform destroy -var-file="${{ github.event.inputs.gh-env }}.tfvars" -input=false -auto-approve "tfplan.bin"
+      run: terraform destroy -input=false -auto-approve "tfplan.bin"
       if: ${{ github.event.inputs.action == 'Destroy' }}
 
 # Exclude from subscription/management group tagging policy
@@ -100,6 +100,7 @@ jobs:
    name: Deploy RG policy
    runs-on: ubuntu-latest
    needs: policy-exclude
+   environment: ${{ github.event.inputs.gh-env }}
    defaults:
      run:
        working-directory: terraform/policy
@@ -128,10 +129,10 @@ jobs:
 
     # Apply if that was the selected option
     - name: Terraform apply
-      run: terraform apply -var-file="${{ github.event.inputs.gh-env }}.tfvars" -input=false -auto-approve "tfplan.bin"
+      run: terraform apply -input=false -auto-approve "tfplan.bin"
       if: ${{ github.event.inputs.action == 'Apply' }}
       
     # Destroy if that was the selected option
     - name: Terraform destroy
-      run: terraform destroy -var-file="${{ github.event.inputs.gh-env }}.tfvars" -input=false -auto-approve "tfplan.bin"
+      run: terraform destroy -input=false -auto-approve "tfplan.bin"
       if: ${{ github.event.inputs.action == 'Destroy' }}

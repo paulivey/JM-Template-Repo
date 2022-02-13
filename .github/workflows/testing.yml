@@ -2,6 +2,14 @@ name: Test IaC
 
 on:
   workflow_dispatch:
+    inputs:
+      action:
+        type: choice
+        options:
+          - Apply
+          - Destroy
+        description: Apply or destroy?
+        default: Apply
 
 env:
   ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}

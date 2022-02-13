@@ -16,8 +16,9 @@ terraform {
 module "create_resource_group" {
   source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/resource_group?ref=main"
 
-  rg_name  = "RG-${upper(var.environment)}-${upper(var.project)}-${upper(var.region_short)}-${upper(var.app_name)}-${var.app_suffix}"
-  location = var.location
+  rg_name         = "RG-${upper(var.environment)}-${upper(var.project)}-${upper(var.region_short)}-${upper(var.app_name)}-${var.app_suffix}"
+  location        = var.location
+  owner_object_id = var.owner_object_id
     tags   = {
     "Country"             = "${var.tag_country}"
     "Environment"         = "${var.tag_environment}"

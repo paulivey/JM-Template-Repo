@@ -3,6 +3,12 @@ name: Test IaC
 on:
   workflow_dispatch:
     inputs:
+      gh-env:
+        type: choice
+        options:
+          - sandbox
+        description: Which GitHub environment
+        default: sandbox
       action:
         type: choice
         options:
@@ -21,14 +27,13 @@ env:
   PROJECT: "DSOPS"
   REGION_SHORT: "EU"
   APP_SUFFIX: "001"
-  GH_ENV: sandbox
 
 jobs:
 # Create all base resources
   base-infra:
    name: Base infra
    runs-on: ubuntu-latest
-   environment: ${{ env.GH_ENV }}
+   environment: ${{ github.event.inputs.gh-env }}
    defaults:
      run:
        working-directory: terraform/base
@@ -53,16 +58,16 @@ jobs:
       run: terraform init
 
     - name: Terraform plan
-      run: terraform plan -out="tfplan.bin" -var-file="${{ env.GH_ENV }}.tfvars" -input=false
+      run: terraform plan -out="tfplan.bin" -var-file="${{ github.event.inputs.gh-env }}.tfvars" -input=false
 
     # Apply if that was the selected option
     - name: Terraform apply
-      run: terraform apply -var-file="${{ env.GH_ENV }}.tfvars" -input=false -auto-approve
+      run: terraform apply "tfplan.bin" -var-file="${{ github.event.inputs.gh-env }}.tfvars" -input=false -auto-approve
       if: ${{ github.event.inputs.action == 'Apply' }}
       
     # Destroy if that was the selected option
     - name: Terraform destroy
-      run: terraform destroy -var-file="${{ env.GH_ENV }}.tfvars" -input=false -auto-approve
+      run: terraform destroy "tfplan.bin" -var-file="${{ github.event.inputs.gh-env }}.tfvars" -input=false -auto-approve
       if: ${{ github.event.inputs.action == 'Destroy' }}
 
 # Exclude from subscription/management group tagging policy
@@ -119,14 +124,14 @@ jobs:
       run: terraform init
 
     - name: Terraform plan
-      run: terraform plan -out="tfplan.bin" -var-file="${{ env.GH_ENV }}.tfvars" -input=false
+      run: terraform plan -out="tfplan.bin" -var-file="${{ github.event.inputs.gh-env }}.tfvars" -input=false
 
     # Apply if that was the selected option
     - name: Terraform apply
-      run: terraform apply -var-file="${{ env.GH_ENV }}.tfvars" -input=false -auto-approve
+      run: terraform apply "tfplan.bin" -var-file="${{ github.event.inputs.gh-env }}.tfvars" -input=false -auto-approve
       if: ${{ github.event.inputs.action == 'Apply' }}
       
     # Destroy if that was the selected option
     - name: Terraform destroy
-      run: terraform destroy -var-file="${{ env.GH_ENV }}.tfvars" -input=false -auto-approve
+      run: terraform destroy "tfplan.bin" -var-file="${{ github.event.inputs.gh-env }}.tfvars" -input=false -auto-approve
       if: ${{ github.event.inputs.action == 'Destroy' }}

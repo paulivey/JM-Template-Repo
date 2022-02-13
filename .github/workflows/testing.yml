@@ -27,6 +27,7 @@ jobs:
   base-infra:
    name: Base infra
    runs-on: ubuntu-latest
+   environment: sandbox
    defaults:
      run:
        working-directory: terraform/base
@@ -51,16 +52,16 @@ jobs:
       run: terraform init
 
     - name: Terraform plan
-      run: terraform plan -out="tfplan.bin" -var-file="sandbox.tfvars" -input=false
+      run: terraform plan -out="tfplan.bin" -var-file="${{github.job.environment}}.tfvars" -input=false
 
     # Apply if that was the selected option
     - name: Terraform apply
-      run: terraform apply -var-file="sandbox.tfvars" -input=false -auto-approve
+      run: terraform apply -var-file="${{github.job.environment}}.tfvars" -input=false -auto-approve
       if: ${{ github.event.inputs.action == 'Apply' }}
       
     # Destroy if that was the selected option
     - name: Terraform destroy
-      run: terraform destroy -var-file="sandbox.tfvars" -input=false -auto-approve
+      run: terraform destroy -var-file="${{github.job.environment}}.tfvars" -input=false -auto-approve
       if: ${{ github.event.inputs.action == 'Destroy' }}
 
 # Exclude from subscription/management group tagging policy
@@ -117,14 +118,14 @@ jobs:
       run: terraform init
 
     - name: Terraform plan
-      run: terraform plan -out="tfplan.bin" -var-file="sandbox.tfvars" -input=false
+      run: terraform plan -out="tfplan.bin" -var-file="${{github.job.environment}}.tfvars" -input=false
 
     # Apply if that was the selected option
     - name: Terraform apply
-      run: terraform apply -var-file="sandbox.tfvars" -input=false -auto-approve
+      run: terraform apply -var-file="${{github.job.environment}}.tfvars" -input=false -auto-approve
       if: ${{ github.event.inputs.action == 'Apply' }}
       
     # Destroy if that was the selected option
     - name: Terraform destroy
-      run: terraform destroy -var-file="sandbox.tfvars" -input=false -auto-approve
+      run: terraform destroy -var-file="${{github.job.environment}}.tfvars" -input=false -auto-approve
       if: ${{ github.event.inputs.action == 'Destroy' }}

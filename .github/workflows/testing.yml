@@ -28,9 +28,9 @@ jobs:
    name: Base infra
    runs-on: ubuntu-latest
    environment: sandbox
-   defaults:
-     run:
-       working-directory: terraform/base
+#   defaults:
+#     run:
+#       working-directory: terraform/base
    
    steps:
     - name: DEBUG

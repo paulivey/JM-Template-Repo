@@ -46,8 +46,8 @@ jobs:
     - name: Terraform Plan
       run: terraform plan -out="tfplan.bin" -var-file="sandbox.tfvars" -input=false
 
-     - name: Terraform Apply
-       run: terraform apply -auto-approve "tfplan.bin" -input=false
+    - name: Terraform Apply
+      run: terraform apply -auto-approve "tfplan.bin" -input=false
 
   # policy-exclude:
   #   name: Azure policy exclusion

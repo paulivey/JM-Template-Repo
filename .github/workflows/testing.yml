@@ -62,12 +62,12 @@ jobs:
 
     # Apply if that was the selected option
     - name: Terraform apply
-      run: terraform apply "tfplan.bin" -var-file="${{ github.event.inputs.gh-env }}.tfvars" -input=false -auto-approve
+      run: terraform apply -var-file="${{ github.event.inputs.gh-env }}.tfvars" -input=false -auto-approve "tfplan.bin"
       if: ${{ github.event.inputs.action == 'Apply' }}
       
     # Destroy if that was the selected option
     - name: Terraform destroy
-      run: terraform destroy "tfplan.bin" -var-file="${{ github.event.inputs.gh-env }}.tfvars" -input=false -auto-approve
+      run: terraform destroy -var-file="${{ github.event.inputs.gh-env }}.tfvars" -input=false -auto-approve "tfplan.bin"
       if: ${{ github.event.inputs.action == 'Destroy' }}
 
 # Exclude from subscription/management group tagging policy
@@ -128,10 +128,10 @@ jobs:
 
     # Apply if that was the selected option
     - name: Terraform apply
-      run: terraform apply "tfplan.bin" -var-file="${{ github.event.inputs.gh-env }}.tfvars" -input=false -auto-approve
+      run: terraform apply -var-file="${{ github.event.inputs.gh-env }}.tfvars" -input=false -auto-approve "tfplan.bin"
       if: ${{ github.event.inputs.action == 'Apply' }}
       
     # Destroy if that was the selected option
     - name: Terraform destroy
-      run: terraform destroy "tfplan.bin" -var-file="${{ github.event.inputs.gh-env }}.tfvars" -input=false -auto-approve
+      run: terraform destroy -var-file="${{ github.event.inputs.gh-env }}.tfvars" -input=false -auto-approve "tfplan.bin"
       if: ${{ github.event.inputs.action == 'Destroy' }}

@@ -24,8 +24,8 @@ env:
 
 jobs:
 # Create all base resources
-  deploy-test-infra:
-   name: Deploy test infra
+  base-infra:
+   name: Base infra
    runs-on: ubuntu-latest
    defaults:
      run:
@@ -40,27 +40,35 @@ jobs:
       with:
         terraform_wrapper: false
 
-    - name: Git Setup
+    - name: Git setup
       run: |
         git config --local --remove-section http."https://github.com/"
         git config --global url."https://foo:${{ env.GH_TOKEN }}@github.com/iveylabs".insteadOf "https://github.com/iveylabs"
       env:
         GH_TOKEN: ${{ secrets.PAT_PUBLIC_REPO }}
 
-    - name: Terraform Init
+    - name: Terraform init
       run: terraform init
 
-    - name: Terraform Plan
+    - name: Terraform plan
       run: terraform plan -out="tfplan.bin" -var-file="sandbox.tfvars" -input=false
 
-    - name: Terraform Apply
+    # Apply if that was the selected option
+    - name: Terraform apply
       run: terraform apply -var-file="sandbox.tfvars" -input=false -auto-approve
+      if: ${{ github.event.inputs.action == 'Apply' }}
+      
+    # Destroy if that was the selected option
+    - name: Terraform destroy
+      run: terraform destroy -var-file="sandbox.tfvars" -input=false -auto-approve
+      if: ${{ github.event.inputs.action == 'Destroy' }}
 
 # Exclude from subscription/management group tagging policy
   policy-exclude:
     name: Azure policy exclusion
-    needs: deploy-test-infra
+    needs: base-infra
     runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.action == 'Apply' }}
     steps:
       - name: Azure Login
         uses: Azure/login@v1.4.3
@@ -98,18 +106,25 @@ jobs:
       with:
         terraform_wrapper: false
 
-    - name: Git Setup
+    - name: Git setup
       run: |
         git config --local --remove-section http."https://github.com/"
         git config --global url."https://foo:${{ env.GH_TOKEN }}@github.com/iveylabs".insteadOf "https://github.com/iveylabs"
       env:
         GH_TOKEN: ${{ secrets.PAT_PUBLIC_REPO }}
         
-    - name: Terraform Init
+    - name: Terraform init
       run: terraform init
 
-    - name: Terraform Plan
+    - name: Terraform plan
       run: terraform plan -out="tfplan.bin" -var-file="sandbox.tfvars" -input=false
 
-    - name: Terraform Apply
+    # Apply if that was the selected option
+    - name: Terraform apply
       run: terraform apply -var-file="sandbox.tfvars" -input=false -auto-approve
+      if: ${{ github.event.inputs.action == 'Apply' }}
+      
+    # Destroy if that was the selected option
+    - name: Terraform destroy
+      run: terraform destroy -var-file="sandbox.tfvars" -input=false -auto-approve
+      if: ${{ github.event.inputs.action == 'Destroy' }}

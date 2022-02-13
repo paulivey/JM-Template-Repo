@@ -37,9 +37,7 @@ jobs:
       id: github_context_step
       run: echo '${{ toJSON(github) }}'
     - name: Dump jobs context
-      run: echo '${{ toJSON(github.jobs.base-infra.environment) }}'
-    - name: Dump job context
-      run: echo '${{ toJSON(job.environment) }}'
+      run: echo '${{ toJSON(jobs.base-infra.environment) }}'
     - name: Dump steps context
       run: echo '${{ toJSON(steps) }}'
     - name: Dump runner context

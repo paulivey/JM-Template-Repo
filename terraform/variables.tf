@@ -1,3 +1,15 @@
+variable "app_resource_group_name" {
+    type    = string
+}
+
+variable "policy_assignment_name" {
+    type    = string
+}
+
+variable "SUBSCRIPTION_ID" {
+    type    = string
+}
+
 variable "app_name" {
     type    = string
 }

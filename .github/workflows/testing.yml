@@ -5,6 +5,7 @@ on:
 
 env:
   ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
+  TF_VAR_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
   ARM_TENANT_ID: ${{ secrets.TENANT_ID }}
   ARM_CLIENT_ID: ${{ secrets.CLIENT_ID }}
   ARM_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
@@ -45,27 +46,27 @@ jobs:
        run: terraform plan -out="tfplan.bin" -var-file="sandbox.tfvars" -input=false
 
      - name: Terraform Apply
-       run: terraform apply -auto-approve "tfplan.bin"
+       run: terraform apply -auto-approve "tfplan.bin" -input=false
 
-  policy-exclude:
-    name: Azure policy exclusion
-    needs: deploy-test-infra
-    runs-on: ubuntu-latest
-    steps:
-      - name: Azure Login
-        uses: Azure/login@v1.4.3
-        with:
-          creds: ${{ secrets.AZURE_CREDS }}
-          enable-AzPSSession: true
+  # policy-exclude:
+  #   name: Azure policy exclusion
+  #   needs: deploy-test-infra
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Azure Login
+  #       uses: Azure/login@v1.4.3
+  #       with:
+  #         creds: ${{ secrets.AZURE_CREDS }}
+  #         enable-AzPSSession: true
 
-      - name: Exclude RG from sub tagging policy
-        uses: Azure/powershell@v1
-        with:
-          inlineScript: |
-            # Get current notScopes list
-            $currentNotScopes = (Get-AzPolicyAssignment -Name "${{ secrets.AZ_POLICY_ASSIGNMENT_NAME }}").Properties.NotScopes
-            # Add new RG to NotScopes of assignment
-            $newNotScopes = $currentNotScopes + "/subscriptions/${{ secrets.SUBSCRIPTION_ID }}/resourceGroups/RG-${{ env.ENVIRONMENT }}-${{ env.PROJECT }}-${{ env.REGION_SHORT }}-${{ env.APP_NAME }}-${{ env.APP_SUFFIX }}"
-            # Modify assignment with new NotScopes
-            Set-AzPolicyAssignment -Name "${{ secrets.AZ_POLICY_ASSIGNMENT_NAME }}" -NotScope $newNotScopes
-          azPSVersion: latest
+  #     - name: Exclude RG from sub tagging policy
+  #       uses: Azure/powershell@v1
+  #       with:
+  #         inlineScript: |
+  #           # Get current notScopes list
+  #           $currentNotScopes = (Get-AzPolicyAssignment -Name "${{ secrets.AZ_POLICY_ASSIGNMENT_NAME }}").Properties.NotScopes
+  #           # Add new RG to NotScopes of assignment
+  #           $newNotScopes = $currentNotScopes + "/subscriptions/${{ secrets.SUBSCRIPTION_ID }}/resourceGroups/RG-${{ env.ENVIRONMENT }}-${{ env.PROJECT }}-${{ env.REGION_SHORT }}-${{ env.APP_NAME }}-${{ env.APP_SUFFIX }}"
+  #           # Modify assignment with new NotScopes
+  #           Set-AzPolicyAssignment -Name "${{ secrets.AZ_POLICY_ASSIGNMENT_NAME }}" -NotScope $newNotScopes
+  #         azPSVersion: latest

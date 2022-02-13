@@ -13,9 +13,23 @@ terraform {
 }
 
 # Create new resource group
+# The provisioner should also exclude this resource group
+# from the subscription-level Azure Policy for tagging
 resource "azurerm_resource_group" "rg" {
   name     = "RG-${upper(var.environment)}-${upper(var.project)}-${upper(var.region_short)}-${upper(var.app_name)}-${var.app_suffix}"
   location = var.location
+  provisioner "local-exec" {
+    command = <<EOT
+      # Get current notScopes list
+      $currentNotScopes = (Get-AzPolicyAssignment -Name "${var.policy_assignment_name}").Properties.NotScopes
+      # Add new RG to NotScopes of assignment
+      $newNotScopes = $currentNotScopes + "/subscriptions/${var.SUBSCRIPTION_ID}/resourceGroups/RG-${upper(var.environment)}-${upper(var.project)}-${upper(var.region_short)}-${upper(var.app_name)}-${var.app_suffix}"
+      # Modify assignment with new NotScopes
+      Set-AzPolicyAssignment -Name "${var.policy_assignment_name}" -NotScope $newNotScopes
+    EOT
+
+    interpreter = ["PowerShell", "-Command"]
+  }
 
   tags = {
     "Country" = "${var.tag_country}"

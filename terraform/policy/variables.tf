@@ -1,15 +1,3 @@
-variable "app_resource_group_name" {
-    type    = string
-}
-
-variable "policy_assignment_name" {
-    type    = string
-}
-
-variable "SUBSCRIPTION_ID" {
-    type    = string
-}
-
 variable "app_name" {
     type    = string
 }
@@ -31,14 +19,6 @@ variable "region_short"  {
 }
 
 variable "app_suffix"  {
-    type    = string
-}
-
-variable "address_prefixes" {
-    type    = list(string)
-}
-
-variable "policy_definition_id" {
     type    = string
 }
 

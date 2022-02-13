@@ -13,69 +13,54 @@ terraform {
 }
 
 # Create new resource group
-# The provisioner should also exclude this resource group
-# from the subscription-level Azure Policy for tagging
-resource "azurerm_resource_group" "rg" {
-  name     = "RG-${upper(var.environment)}-${upper(var.project)}-${upper(var.region_short)}-${upper(var.app_name)}-${var.app_suffix}"
+module "create_resource_group" {
+  source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/resource_group?ref=main"
+
+  rg_name  = "RG-${upper(var.environment)}-${upper(var.project)}-${upper(var.region_short)}-${upper(var.app_name)}-${var.app_suffix}"
   location = var.location
-  provisioner "local-exec" {
-    command = <<EOT
-      # Get current notScopes list
-      $currentNotScopes = (Get-AzPolicyAssignment -Name "${var.policy_assignment_name}").Properties.NotScopes
-      # Add new RG to NotScopes of assignment
-      $newNotScopes = $currentNotScopes + "/subscriptions/${var.SUBSCRIPTION_ID}/resourceGroups/RG-${upper(var.environment)}-${upper(var.project)}-${upper(var.region_short)}-${upper(var.app_name)}-${var.app_suffix}"
-      # Modify assignment with new NotScopes
-      Set-AzPolicyAssignment -Name "${var.policy_assignment_name}" -NotScope $newNotScopes
-    EOT
-
-    interpreter = ["PowerShell", "-Command"]
-  }
-
-  tags = {
-    "Country" = "${var.tag_country}"
-    "Environment" = "${var.tag_environment}"
-    "Maintenance Window" = "${var.tag_window}"
-    "Business Sector" = "${var.tag_sector}"
-    "Application Name" = "${var.tag_app_name}"
-    "Cost Center" = "${var.tag_cost_center}"
-    "Application Owner" = "${var.tag_app_owner}"
+    tags   = {
+    "Country"             = "${var.tag_country}"
+    "Environment"         = "${var.tag_environment}"
+    "Maintenance Window"  = "${var.tag_window}"
+    "Business Sector"     = "${var.tag_sector}"
+    "Application Name"    = "${var.tag_app_name}"
+    "Cost Center"         = "${var.tag_cost_center}"
+    "Application Owner"   = "${var.tag_app_owner}"
     "Data Classification" = "${var.tag_classification}"
-    "Service Class" = "${var.tag_class}"
+    "Service Class"       = "${var.tag_class}"
   }
 }
+# resource "azurerm_resource_group" "rg" {
+#   name     = "RG-${upper(var.environment)}-${upper(var.project)}-${upper(var.region_short)}-${upper(var.app_name)}-${var.app_suffix}"
+#   location = var.location
 
-# Set up Azure Policy assignment on the resource group
-module "policy_assignment" {
-  source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/azure_policy_rg_assignment?ref=main"
-
-  depends_on = [
-    azurerm_resource_group.rg
-  ]
-
-  resource_group_name = azurerm_resource_group.rg.name
-  tag_country         = var.tag_country
-  tag_environment     = var.tag_environment
-  tag_window          = var.tag_window
-  tag_sector          = var.tag_sector
-  tag_app_name        = var.tag_app_name
-  tag_cost_center     = var.tag_cost_center
-  tag_app_owner       = var.tag_app_owner
-  tag_classification  = var.tag_classification
-  tag_class           = var.tag_class
-}
+#   tags = {
+#     "Country" = "${var.tag_country}"
+#     "Environment" = "${var.tag_environment}"
+#     "Maintenance Window" = "${var.tag_window}"
+#     "Business Sector" = "${var.tag_sector}"
+#     "Application Name" = "${var.tag_app_name}"
+#     "Cost Center" = "${var.tag_cost_center}"
+#     "Application Owner" = "${var.tag_app_owner}"
+#     "Data Classification" = "${var.tag_classification}"
+#     "Service Class" = "${var.tag_class}"
+#   }
+# }
 
 # Create app service web app + service plan
 module "create_app" {
   source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/web_app_linux?ref=main"
-  
-  depends_on = [
-    module.policy_assignment
+
+    depends_on = [
+      module.create_resource_group
   ]
+
 
   # Input variables
   app_name     = var.app_name
-  app_rg_name  = azurerm_resource_group.rg.name
+  app_rg_name  = module.create_resource_group.rg_name
   asp_name     = "app-svcplan-${lower(var.project)}-${lower(var.region_short)}-${lower(var.app_name)}"
+  tags         = module.create_resource_group.rg_tags
   app_settings = {
     "SCM_DO_BUILD_DURING_DEPLOYMENT" = "1"
     "WEBSITES_CONTAINER_START_TIME_LIMIT" = "1800"
@@ -91,6 +76,7 @@ module "enable_private_endpoint" {
   app_name          = var.app_name
   resource_id       = module.create_app.web_app_id
   subresource_names = [ "sites" ]
+  tags              = module.create_resource_group.rg_tags
 }
 
 # Enable vNet integration
@@ -106,8 +92,9 @@ module "enable_vnet_integration" {
   subnet_name             = "SNET-${upper(var.environment)}-${upper(var.project)}-VI-${upper(var.app_name)}-${upper(var.region_short)}-${var.app_suffix}"
   address_prefixes        = var.address_prefixes
   svc_delegation_name     = "Microsoft.Web/serverFarms"
-  web_app_rg_name         = azurerm_resource_group.rg.name
+  web_app_rg_name         = module.create_resource_group.rg_name
   web_app_name            = var.app_name
+  tags                    = module.create_resource_group.rg_tags
 }
 
 # Create storage account
@@ -119,8 +106,9 @@ module "create_storage_account" {
   ]
 
   # Input variables
-  sta_rg_name = azurerm_resource_group.rg.name
+  sta_rg_name = module.create_resource_group.rg_name
   sta_name    = "${lower(var.app_name)}"
+  tags        = module.create_resource_group.rg_tags
 }
 
 # Create storage container
@@ -147,4 +135,24 @@ module "create_storage_share" {
   # Input variables
   sta_name   = "${lower(var.app_name)}"
   share_name = "myshare"
+}
+
+# Set up Azure Policy assignment on the resource group
+module "policy_assignment" {
+  source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/azure_policy_rg_assignment?ref=main"
+
+  depends_on = [
+    azurerm_resource_group.rg
+  ]
+
+  resource_group_name = azurerm_resource_group.rg.name
+  tag_country         = var.tag_country
+  tag_environment     = var.tag_environment
+  tag_window          = var.tag_window
+  tag_sector          = var.tag_sector
+  tag_app_name        = var.tag_app_name
+  tag_cost_center     = var.tag_cost_center
+  tag_app_owner       = var.tag_app_owner
+  tag_classification  = var.tag_classification
+  tag_class           = var.tag_class
 }

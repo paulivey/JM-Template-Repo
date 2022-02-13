@@ -52,7 +52,7 @@ jobs:
       run: terraform init
 
     - name: Terraform plan
-      run: terraform plan -out="tfplan.bin" -var-file="${{jobs.base-infra.environment}}.tfvars" -input=false
+      run: terraform plan -out="tfplan.bin" -var-file="${{github.jobs.base-infra.environment}}.tfvars" -input=false
 
     # Apply if that was the selected option
     - name: Terraform apply

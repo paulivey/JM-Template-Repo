@@ -67,7 +67,7 @@ jobs:
       
     # Destroy if that was the selected option
     - name: Terraform destroy
-      run: terraform destroy -input=false -auto-approve "tfplan.bin"
+      run: terraform destroy -input=false -auto-approve
       if: ${{ github.event.inputs.action == 'Destroy' }}
 
 # Exclude from subscription/management group tagging policy
@@ -85,6 +85,7 @@ jobs:
 
       - name: Exclude RG from sub tagging policy
         uses: Azure/powershell@v1
+        if: ${{ github.event.inputs.action == 'Apply' }}
         with:
           inlineScript: |
             # Get current notScopes list
@@ -134,5 +135,5 @@ jobs:
       
     # Destroy if that was the selected option
     - name: Terraform destroy
-      run: terraform destroy -input=false -auto-approve "tfplan.bin"
+      run: terraform destroy -input=false -auto-approve
       if: ${{ github.event.inputs.action == 'Destroy' }}

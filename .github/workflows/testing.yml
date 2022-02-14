@@ -31,9 +31,12 @@ env:
 jobs:
 # Create all base resources
   base-infra:
-   name: Base infra
+   name: ${{  github.event.inputs.action }} base infra
    runs-on: ubuntu-latest
    environment: ${{ github.event.inputs.gh-env }}
+   concurrency:
+    group: ${{ github.event.inputs.gh-env }}
+    cancel-in-progress: false
    defaults:
      run:
        working-directory: terraform/base
@@ -75,10 +78,13 @@ jobs:
     name: Azure policy exclusion
     needs: base-infra
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.action == 'Apply' }}
+    concurrency:
+      group: ${{ github.event.inputs.gh-env }}
+      cancel-in-progress: false
     steps:
       - name: Azure Login
         uses: Azure/login@v1.4.3
+        if: ${{ github.event.inputs.action == 'Apply' }}
         with:
           creds: ${{ secrets.AZURE_CREDS }}
           enable-AzPSSession: true
@@ -98,10 +104,13 @@ jobs:
 
 # Create resource group level tagging policy
   rg-policy:
-   name: Deploy RG policy
+   name: ${{  github.event.inputs.action }} RG policy assignment
    runs-on: ubuntu-latest
    needs: policy-exclude
    environment: ${{ github.event.inputs.gh-env }}
+   concurrency:
+    group: ${{ github.event.inputs.gh-env }}
+    cancel-in-progress: false
    defaults:
      run:
        working-directory: terraform/policy

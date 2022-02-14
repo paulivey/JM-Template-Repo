@@ -1,7 +1,3 @@
-variable "app_resource_group_name" {
-    type    = string
-}
-
 variable "owner_object_id" {
     type    = string
 }

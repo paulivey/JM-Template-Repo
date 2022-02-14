@@ -1,4 +1,3 @@
-app_resource_group_name = "RG-SBX-DSOPS-EU-BLUEHYDROGENABACUS-001"
 owner_object_id         = "8eaf6ddb-2234-4b39-896b-83964ceab901"
 policy_assignment_name  = "f886cbc1753046d58cfe7d3f"
 app_name                = "bluehydrogenabacus"

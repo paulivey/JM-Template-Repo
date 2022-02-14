@@ -62,6 +62,7 @@ jobs:
 
     - name: Terraform plan
       run: terraform plan -out="tfplan.bin" -var-file="${{ github.event.inputs.gh-env }}.tfvars" -input=false
+      if: ${{ github.event.inputs.action == 'Apply' }}
 
     # Apply if that was the selected option
     - name: Terraform apply
@@ -136,6 +137,7 @@ jobs:
 
     - name: Terraform plan
       run: terraform plan -out="tfplan.bin" -var-file="${{ github.event.inputs.gh-env }}.tfvars" -input=false
+      if: ${{ github.event.inputs.action == 'Apply' }}
 
     # Apply if that was the selected option
     - name: Terraform apply

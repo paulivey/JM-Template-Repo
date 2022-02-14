@@ -70,7 +70,7 @@ jobs:
       
     # Destroy if that was the selected option
     - name: Terraform destroy
-      run: terraform destroy -input=false -auto-approve
+      run: terraform destroy -input=false -auto-approve -var-file="${{ github.event.inputs.gh-env }}.tfvars"
       if: ${{ github.event.inputs.action == 'Destroy' }}
 
 # Exclude from subscription/management group tagging policy
@@ -144,5 +144,5 @@ jobs:
       
     # Destroy if that was the selected option
     - name: Terraform destroy
-      run: terraform destroy -input=false -auto-approve
+      run: terraform destroy -input=false -auto-approve -var-file="${{ github.event.inputs.gh-env }}.tfvars"
       if: ${{ github.event.inputs.action == 'Destroy' }}

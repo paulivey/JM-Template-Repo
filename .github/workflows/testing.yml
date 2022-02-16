@@ -33,7 +33,8 @@ jobs:
   base-infra:
    name: ${{ github.event.inputs.action }} base infra
    runs-on: ubuntu-latest
-   environment: ${{ github.event.inputs.gh-env }}
+   #environment: ${{ github.event.inputs.gh-env }}
+   environment: testing
    concurrency:
     group: ${{ github.event.inputs.gh-env }}
     cancel-in-progress: false

@@ -96,10 +96,15 @@ jobs:
           inlineScript: |
             # Get current notScopes list
             $currentNotScopes = (Get-AzPolicyAssignment -Name "${{ secrets.AZ_POLICY_ASSIGNMENT_NAME }}").Properties.NotScopes
-            # Add new RG to NotScopes of assignment
-            $newNotScopes = $currentNotScopes + "/subscriptions/${{ secrets.SUBSCRIPTION_ID }}/resourceGroups/RG-${{ env.ENVIRONMENT }}-${{ env.PROJECT }}-${{ env.REGION_SHORT }}-${{ env.APP_NAME }}-${{ env.APP_SUFFIX }}"
-            # Modify assignment with new NotScopes
-            Set-AzPolicyAssignment -Name "${{ secrets.AZ_POLICY_ASSIGNMENT_NAME }}" -NotScope $newNotScopes
+            # Add new RG to NotScopes of assignment, if not already excluded
+            if(!currentNotScopes.Contains("/subscriptions/${{ secrets.SUBSCRIPTION_ID }}/resourceGroups/RG-${{ env.ENVIRONMENT }}-${{ env.PROJECT }}-${{ env.REGION_SHORT }}-${{ env.APP_NAME }}-${{ env.APP_SUFFIX }}")) {
+              $newNotScopes = $currentNotScopes + "/subscriptions/${{ secrets.SUBSCRIPTION_ID }}/resourceGroups/RG-${{ env.ENVIRONMENT }}-${{ env.PROJECT }}-${{ env.REGION_SHORT }}-${{ env.APP_NAME }}-${{ env.APP_SUFFIX }}"
+              # Modify assignment with new NotScopes
+              Set-AzPolicyAssignment -Name "${{ secrets.AZ_POLICY_ASSIGNMENT_NAME }}" -NotScope $newNotScopes
+            }
+            else {
+              Write-Host "Resource group already excluded. No change required."
+            }
           azPSVersion: latest
 
 # Create resource group level tagging policy

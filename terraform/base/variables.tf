@@ -2,10 +2,6 @@ variable "owner_object_id" {
     type    = string
 }
 
-variable "policy_assignment_name" {
-    type    = string
-}
-
 variable "app_name" {
     type    = string
 }
@@ -32,10 +28,6 @@ variable "app_suffix"  {
 
 variable "address_prefixes" {
     type    = list(string)
-}
-
-variable "policy_definition_id" {
-    type    = string
 }
 
 variable "tag_country" {

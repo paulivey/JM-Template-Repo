@@ -14,7 +14,7 @@ terraform {
 
 # Create new resource group
 module "create_resource_group" {
-  source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/resource_group?ref=1.0.0"
+  source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/resource_group?ref=main"
 
   rg_name         = "RG-${upper(var.environment)}-${upper(var.project)}-${upper(var.region_short)}-${upper(var.app_name)}-${var.app_suffix}"
   location        = var.location
@@ -34,7 +34,7 @@ module "create_resource_group" {
 
 # Create app service web app + service plan
 module "create_app" {
-  source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/web_app_linux?ref=1.0.0"
+  source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/web_app_linux?ref=main"
 
     depends_on = [
       module.create_resource_group
@@ -54,7 +54,7 @@ module "create_app" {
 
 # Enable private endpoint
 module "enable_private_endpoint" {
-  source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/private_endpoint?ref=1.0.0"
+  source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/private_endpoint?ref=main"
 
   # Input variables
   pvt_endpoint_name = "PE-${upper(var.environment)}-${upper(var.project)}-${upper(var.region_short)}-${upper(var.app_name)}-${var.app_suffix}"
@@ -66,7 +66,7 @@ module "enable_private_endpoint" {
 
 # Enable vNet integration
 module "enable_vnet_integration" {
-  source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/vnet_integration?ref=1.0.0"
+  source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/vnet_integration?ref=main"
 
   depends_on = [
     module.enable_private_endpoint
@@ -84,7 +84,7 @@ module "enable_vnet_integration" {
 
 # Create storage account
 module "create_storage_account" {
-  source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/storage_account?ref=1.0.0"
+  source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/storage_account?ref=main"
 
   depends_on = [
     module.create_resource_group
@@ -98,7 +98,7 @@ module "create_storage_account" {
 
 # Create storage container
 module "create_storage_container" {
-  source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/storage_container?ref=1.0.0"
+  source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/storage_container?ref=main"
 
   depends_on = [
     module.create_storage_account
@@ -111,7 +111,7 @@ module "create_storage_container" {
 
 # Create storage share
 module "create_storage_share" {
-  source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/storage_share?ref=1.0.0"
+  source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/storage_share?ref=main"
 
   depends_on = [
     module.create_storage_account

@@ -46,3 +46,13 @@ jobs:
       TAG_APP_OWNER: paul ivey
       TAG_CLASSIFICATION: internal
       TAG_SERVICE_CLASS: platinum
+    secrets:
+      POLICY_ASSIGNMENT_NAME: ${{ secrets.POLICY_ASSIGNMENT_NAME }}
+      POLICY_DEFINITION_ID: ${{ secrets.POLICY_DEFINITION_ID }}
+      APP_ENVIRONMENT: ${{ secrets.APP_ENVIRONMENT }}
+      OWNER_OBJECT_ID: ${{ secrets.OWNER_OBJECT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+      GH_PAT: ${{ secrets.GH_PAT }}

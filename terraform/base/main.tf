@@ -20,15 +20,15 @@ module "create_resource_group" {
   location        = var.location
   owner_object_id = var.owner_object_id
     tags   = {
-    "Country"             = "${var.tag_country}"
-    "Environment"         = "${var.tag_environment}"
-    "Maintenance Window"  = "${var.tag_window}"
-    "Business Sector"     = "${var.tag_sector}"
-    "Application Name"    = "${var.tag_app_name}"
-    "Cost Center"         = "${var.tag_cost_center}"
-    "Application Owner"   = "${var.tag_app_owner}"
-    "Data Classification" = "${var.tag_classification}"
-    "Service Class"       = "${var.tag_class}"
+    "Country"             = "${upper(var.tag_country))}"
+    "Environment"         = "${upper(var.tag_environment)}"
+    "Maintenance Window"  = "${upper(var.tag_window)}"
+    "Business Sector"     = "${upper(var.tag_sector)}"
+    "Application Name"    = "${upper(var.app_name)}"
+    "Cost Center"         = "${upper(var.tag_cost_center)}"
+    "Application Owner"   = "${upper(var.tag_app_owner)}"
+    "Data Classification" = "${upper(var.tag_classification)}"
+    "Service Class"       = "${upper(var.tag_class)}"
   }
 }
 

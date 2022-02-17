@@ -110,7 +110,7 @@ jobs:
     - name: Replace tokens
       uses: cschleiden/replace-tokens@v1.1
       with:
-        files: '[main.tf, variables.tfvars]'
+        files: '["main.tf"]'
       env:
         APP_ENVIRONMENT: ${{ secrets.APP_ENVIRONMENT }}
         OWNER_OBJECT_ID: ${{ secrets.OWNER_OBJECT_ID }}

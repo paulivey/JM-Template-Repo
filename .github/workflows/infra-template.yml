@@ -110,7 +110,7 @@ jobs:
     - name: Replace tokens
       uses: cschleiden/replace-tokens@v1.1
       with:
-        files: '["terraform/base/main.tf, terraform/base/variables.tfvars"]'
+        files: '["terraform/base/main.tf", "terraform/base/variables.tfvars"]'
       env:
         APP_ENVIRONMENT: ${{ secrets.APP_ENVIRONMENT }}
         OWNER_OBJECT_ID: ${{ secrets.OWNER_OBJECT_ID }}

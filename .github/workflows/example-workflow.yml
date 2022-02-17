@@ -34,19 +34,19 @@ jobs:
     with:
       GH_ENVIRONMENT: ${{ github.event.inputs.GH_ENVIRONMENT }}
       TERRAFORM_ACTION: ${{ github.event.inputs.TERRAFORM_ACTION }}
-      APP_NAME: bluehydrogenabacus
-      APP_PROJECT: DSOPS
-      APP_LOCATION: northeurope
-      APP_REGION_SHORT: EU
-      APP_SUFFIX: 001
-      TAG_COUNTRY: UK
-      TAG_ENVIRONMENT: SBX-DSOPS-EMEA
-      TAG_MAINT_WINDOW: NOT REQUIRED
-      TAG_SECTOR: NONE
-      TAG_COST_CENTER: 012345
-      TAG_APP_OWNER: paul ivey
-      TAG_CLASSIFICATION: internal
-      TAG_SERVICE_CLASS: platinum
+      APP_NAME: "bluehydrogenabacus"
+      APP_PROJECT: "DSOPS"
+      APP_LOCATION: "northeurope"
+      APP_REGION_SHORT: "EU"
+      APP_SUFFIX: "001"
+      TAG_COUNTRY: "UK"
+      TAG_ENVIRONMENT: "SBX-DSOPS-EMEA"
+      TAG_MAINT_WINDOW: "NOT REQUIRED"
+      TAG_SECTOR: "NONE"
+      TAG_COST_CENTER: "012345"
+      TAG_APP_OWNER: "paul ivey"
+      TAG_CLASSIFICATION: "internal"
+      TAG_SERVICE_CLASS: "platinum"
     secrets:
       POLICY_ASSIGNMENT_NAME: ${{ secrets.POLICY_ASSIGNMENT_NAME }}
       POLICY_DEFINITION_ID: ${{ secrets.POLICY_DEFINITION_ID }}

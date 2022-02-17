@@ -26,7 +26,7 @@ jobs:
   
   # MAKE SURE YOU CHANGE THE PATH!
   infra:
-    name: Provision infrastructure
+    name: Infrastructure
  #   needs: ci
     # CHANGE THIS PATH!
     uses: iveylabs/JM-Template-Repo/.github/workflows/infra-template.yml@main

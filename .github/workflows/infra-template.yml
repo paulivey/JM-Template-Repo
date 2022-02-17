@@ -3,33 +3,82 @@ name: IaC template
 on:
   workflow_call:
     inputs:
-      environment: # GitHub environment
+      GH_ENVIRONMENT: # GitHub environment
         type: string
         default: sandbox
         required: true
-      action: # Terraform apply or destroy
+      TERRAFORM_ACTION: # Terraform apply or destroy
         type: string
         default: apply
-
-env:
-  ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
-  ARM_TENANT_ID: ${{ secrets.TENANT_ID }}
-  ARM_CLIENT_ID: ${{ secrets.CLIENT_ID }}
-  ARM_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
-  APP_NAME: "BLUEHYDROGENABACUS"
-  ENVIRONMENT: "SBX"
-  PROJECT: "DSOPS"
-  REGION_SHORT: "EU"
-  APP_SUFFIX: "001"
+      APP_NAME:
+        type: string
+        required: true
+      APP_PROJECT:
+        type: string
+        required: true
+      APP_LOCATION:
+        type: string
+        required: true
+      APP_REGION_SHORT:
+        type: string
+        required: true
+      APP_SUFFIX:
+        type: string
+        required: true
+      TAG_COUNTRY:
+        type: string
+        required: true
+      TAG_ENVIRONMENT:
+        type: string
+        required: true
+      TAG_MAINT_WINDOW:
+        type: string
+        required: true
+      TAG_SECTOR:
+        type: string
+        required: true
+      TAG_COST_CENTER:
+        type: string
+        required: true
+      TAG_APP_OWNER:
+        type: string
+        required: true
+      TAG_CLASSIFICATION:
+        type: string
+        required: true
+      TAG_SERVICE_CLASS:
+        type: string
+        required: true
+    
+    # Secrets need to be passed from the calling workflow, because reusable workflows can't access secrets directly
+    secrets:
+      POLICY_ASSIGNMENT_NAME:
+        required: true
+      POLICY_DEFINITION_ID:
+        required: true
+      APP_ENVIRONMENT:
+        required: true
+      OWNER_OBJECT_ID:
+        required: true
+      ARM_SUBSCRIPTION_ID:
+        required: true
+      ARM_TENANT_ID:
+        required: true
+      ARM_CLIENT_ID:
+        required: true
+      ARM_CLIENT_SECRET:
+        required: true
+      GH_PAT: # GitHub PAT for accessing the modules repo via Terraform
+        required: true
 
 jobs:
 # Create all base resources
   base-infra:
-   name: ${{ github.event.inputs.action }} base infra
+   name: ${{ inputs.TERRAFORM_ACTION }} base infra
    runs-on: ubuntu-latest
-   environment: ${{ github.event.inputs.gh-env }}
-   concurrency:
-    group: ${{ github.event.inputs.gh-env }}
+   environment: ${{ inputs.GH_ENVIRONMENT }}
+   concurrency: # This prevents multiple concurrent deployments to the same environment
+    group: ${{ inputs.GH_ENVIRONMENT }}
     cancel-in-progress: false
    defaults:
      run:
@@ -44,38 +93,65 @@ jobs:
       with:
         terraform_wrapper: false
 
+    # MAKE SURE YOU CHANGE THE ORG NAME!
     - name: Git setup
       run: |
         git config --local --remove-section http."https://github.com/"
         git config --global url."https://foo:${{ env.GH_TOKEN }}@github.com/iveylabs".insteadOf "https://github.com/iveylabs"
+      env: # DID YOU CHANGE THE ORG NAME?
+        GH_TOKEN: ${{ secrets.GH_PAT }} # ARE YOU SURE YOU CHANGED THE ORG NAME?
+      # LAST CHANCE. CHANGE THE ORG NAME!
+      
+    - name: Replace tokens
+      uses: cschleiden/replace-tokens@v1.1
+      with:
+        files: '[**/variables.tf, **/main.tf]'
       env:
-        GH_TOKEN: ${{ secrets.PAT_PUBLIC_REPO }}
+        APP_ENVIRONMENT: ${{ secrets.APP_ENVIRONMENT }}
+        OWNER_OBJECT_ID: ${{ secrets.OWNER_OBJECT_ID }}
+        ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+        ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+        ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+        ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+        APP_NAME: ${{ inputs.APP_NAME }}
+        APP_PROJECT: ${{ inputs.PROJECT }}
+        APP_LOCATION: ${{ inputs.LOCATION }}
+        APP_REGION_SHORT: ${{ inputs.REGION_SHORT }}
+        APP_SUFFIX: ${{ inputs.APP_SUFFIX }}
+        TAG_COUNTRY: ${{ inputs.TAG_COUNTRY }}
+        TAG_ENVIRONMENT: ${{ inputs.TAG_ENVIRONMENT }}
+        TAG_MAINT_WINDOW: ${{ inputs.TAG_MAINT_WINDOW }}
+        TAG_SECTOR: ${{ inputs.TAG_SECTOR }}
+        TAG_COST_CENTER: ${{ inputs.TAG_COST_CENTER }}
+        TAG_APP_OWNER: ${{ inputs.TAG_APP_OWNER }}
+        TAG_CLASSIFICATION: ${{ inputs.TAG_CLASSIFICATION }}
+        TAG_SERVICE_CLASS: ${{ inputs.TAG_SERVICE_CLASS }}
 
     - name: Terraform init
       run: terraform init
 
     - name: Terraform plan
-      run: terraform plan -out="tfplan.bin" -var-file="${{ github.event.inputs.gh-env }}.tfvars" -input=false
-      if: ${{ github.event.inputs.action == 'apply' }}
+      run: terraform plan -out="tfplan.bin" -var-file="variables.tfvars" -input=false
+      if: ${{ inputs.TERRAFORM_ACTION == 'apply' }}
 
     # Apply if that was the selected option
     - name: Terraform apply
       run: terraform apply -input=false -auto-approve "tfplan.bin"
-      if: ${{ github.event.inputs.action == 'apply' }}
+      if: ${{ inputs.TERRAFORM_ACTION == 'apply' }}
       
     # Destroy if that was the selected option
     - name: Terraform destroy
-      run: terraform destroy -input=false -auto-approve -var-file="${{ github.event.inputs.gh-env }}.tfvars"
-      if: ${{ github.event.inputs.action == 'destroy' }}
+      run: terraform destroy -input=false -auto-approve -var-file="variables.tfvars"
+      if: ${{ inputs.TERRAFORM_ACTION == 'destroy' }}
 
 # Exclude from subscription/management group tagging policy
   policy-exclude:
     name: Azure policy exclusion
     needs: base-infra
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.action == 'apply' }}
+    if: ${{ inputs.TERRAFORM_ACTION == 'apply' }}
     concurrency:
-      group: ${{ github.event.inputs.gh-env }}
+      group: ${{ inputs.GH_ENVIRONMENT }}
       cancel-in-progress: false
     steps:
       - name: Azure Login
@@ -89,12 +165,12 @@ jobs:
         with:
           inlineScript: |
             # Get current notScopes list
-            $currentNotScopes = (Get-AzPolicyAssignment -Name "${{ secrets.AZ_POLICY_ASSIGNMENT_NAME }}").Properties.NotScopes
+            $currentNotScopes = (Get-AzPolicyAssignment -Name "${{ secrets.POLICY_ASSIGNMENT_NAME }}").Properties.NotScopes
             # Add new RG to NotScopes of assignment, if not already excluded
-            if(!$currentNotScopes.Contains("/subscriptions/${{ secrets.SUBSCRIPTION_ID }}/resourceGroups/RG-${{ env.ENVIRONMENT }}-${{ env.PROJECT }}-${{ env.REGION_SHORT }}-${{ env.APP_NAME }}-${{ env.APP_SUFFIX }}")) {
-              $newNotScopes = $currentNotScopes + "/subscriptions/${{ secrets.SUBSCRIPTION_ID }}/resourceGroups/RG-${{ env.ENVIRONMENT }}-${{ env.PROJECT }}-${{ env.REGION_SHORT }}-${{ env.APP_NAME }}-${{ env.APP_SUFFIX }}"
+            if(!$currentNotScopes.Contains("/subscriptions/${{ secrets.ARM_SUBSCRIPTION_ID }}/resourceGroups/RG-${{ secrets.APP_ENVIRONMENT }}-${{ inputs.APP_PROJECT }}-${{ inputs.APP_REGION_SHORT }}-${{ inputs.APP_NAME }}-${{ inputs.APP_SUFFIX }}")) {
+              $newNotScopes = $currentNotScopes + "/subscriptions/${{ secrets.ARM_SUBSCRIPTION_ID }}/resourceGroups/RG-${{ secrets.APP_ENVIRONMENT }}-${{ inputs.APP_PROJECT }}-${{ inputs.APP_REGION_SHORT }}-${{ inputs.APP_NAME }}-${{ inputs.APP_SUFFIX }}"
               # Modify assignment with new NotScopes
-              Set-AzPolicyAssignment -Name "${{ secrets.AZ_POLICY_ASSIGNMENT_NAME }}" -NotScope $newNotScopes
+              Set-AzPolicyAssignment -Name "${{ secrets.POLICY_ASSIGNMENT_NAME }}" -NotScope $newNotScopes
             }
             else {
               Write-Host "Resource group already excluded. No change required."
@@ -106,10 +182,10 @@ jobs:
    name: Create RG policy assignment
    runs-on: ubuntu-latest
    needs: policy-exclude
-   environment: ${{ github.event.inputs.gh-env }}
-   if: ${{ github.event.inputs.action == 'apply' }}
+   environment: ${{ inputs.GH_ENVIRONMENT }}
+   if: ${{ inputs.TERRAFORM_ACTION == 'apply' }}
    concurrency:
-    group: ${{ github.event.inputs.gh-env }}
+    group: ${{ inputs.GH_ENVIRONMENT }}
     cancel-in-progress: false
    defaults:
      run:
@@ -124,18 +200,46 @@ jobs:
       with:
         terraform_wrapper: false
 
+    # MAKE SURE YOU CHANGE THE ORG NAME!
     - name: Git setup
       run: |
         git config --local --remove-section http."https://github.com/"
         git config --global url."https://foo:${{ env.GH_TOKEN }}@github.com/iveylabs".insteadOf "https://github.com/iveylabs"
+      env: # DID YOU CHANGE THE ORG NAME?
+        GH_TOKEN: ${{ secrets.GH_PAT }} # ARE YOU SURE YOU CHANGED THE ORG NAME?
+      # LAST CHANCE. CHANGE THE ORG NAME!
+        
+        
+    - name: Replace tokens
+      uses: cschleiden/replace-tokens@v1.1
+      with:
+        files: '[**/variables.tf, **/main.tf]'
       env:
-        GH_TOKEN: ${{ secrets.PAT_PUBLIC_REPO }}
+        APP_ENVIRONMENT: ${{ secrets.APP_ENVIRONMENT }}
+        OWNER_OBJECT_ID: ${{ secrets.OWNER_OBJECT_ID }}
+        ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+        ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+        ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+        ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+        APP_NAME: ${{ inputs.APP_NAME }}
+        APP_PROJECT: ${{ inputs.PROJECT }}
+        APP_LOCATION: ${{ inputs.LOCATION }}
+        APP_REGION_SHORT: ${{ inputs.REGION_SHORT }}
+        APP_SUFFIX: ${{ inputs.APP_SUFFIX }}
+        TAG_COUNTRY: ${{ inputs.TAG_COUNTRY }}
+        TAG_ENVIRONMENT: ${{ inputs.TAG_ENVIRONMENT }}
+        TAG_MAINT_WINDOW: ${{ inputs.TAG_MAINT_WINDOW }}
+        TAG_SECTOR: ${{ inputs.TAG_SECTOR }}
+        TAG_COST_CENTER: ${{ inputs.TAG_COST_CENTER }}
+        TAG_APP_OWNER: ${{ inputs.TAG_APP_OWNER }}
+        TAG_CLASSIFICATION: ${{ inputs.TAG_CLASSIFICATION }}
+        TAG_SERVICE_CLASS: ${{ inputs.TAG_SERVICE_CLASS }}
         
     - name: Terraform init
       run: terraform init
 
     - name: Terraform plan
-      run: terraform plan -out="tfplan.bin" -var-file="${{ github.event.inputs.gh-env }}.tfvars" -input=false
+      run: terraform plan -out="tfplan.bin" -var-file="variables.tfvars" -input=false
 
     # Apply if that was the selected option
     - name: Terraform apply

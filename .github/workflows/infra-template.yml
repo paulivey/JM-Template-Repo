@@ -128,6 +128,8 @@ jobs:
         TAG_CLASSIFICATION: ${{ inputs.TAG_CLASSIFICATION }}
         TAG_SERVICE_CLASS: ${{ inputs.TAG_SERVICE_CLASS }}
         
+    - run: dir
+    
     - name: DEBUG main
       run: cat main.tf
       

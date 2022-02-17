@@ -8,7 +8,7 @@ terraform {
     resource_group_name  = "RG-TERRAFORM"
     storage_account_name = "iveyterraformbackend"
     container_name       = "terraform"
-    key                  = "policy-green-testing.terraform.tfstate"
+    key                  = "#{APP_NAME}#-policy.terraform.tfstate"
   }
 }
 

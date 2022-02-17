@@ -92,7 +92,7 @@ module "create_storage_account" {
 
   # Input variables
   sta_rg_name = module.create_resource_group.rg_name
-  sta_name    = "${lower(var.app_name)}"
+  sta_name    = var.app_name
   tags        = module.create_resource_group.rg_tags
 }
 
@@ -105,7 +105,7 @@ module "create_storage_container" {
   ]
 
   # Input variables
-  sta_name       = "${lower(var.app_name)}"
+  sta_name       = var.app_name
   container_name = "mycontainer"
 }
 
@@ -118,6 +118,6 @@ module "create_storage_share" {
   ]
 
   # Input variables
-  sta_name   = "${lower(var.app_name)}"
+  sta_name   = var.app_name
   share_name = "myshare"
 }

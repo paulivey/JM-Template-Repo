@@ -148,6 +148,7 @@ jobs:
   policy-exclude:
     name: Azure policy exclusion
     needs: base-infra
+    environment: ${{ inputs.GH_ENVIRONMENT }}
     runs-on: ubuntu-latest
     if: ${{ inputs.TERRAFORM_ACTION == 'apply' }}
     concurrency:

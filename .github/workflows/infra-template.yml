@@ -68,6 +68,8 @@ on:
         required: true
       ARM_CLIENT_SECRET:
         required: true
+      AZURE_CREDS:
+        required: true
       GH_PAT: # GitHub PAT for accessing the modules repo via Terraform
         required: true
 

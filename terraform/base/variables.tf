@@ -54,10 +54,6 @@ variable "tag_sector" {
     type    = string
 }
 
-variable "tag_app_name" {
-    type    = string
-}
-
 variable "tag_cost_center" {
     type    = string
 }

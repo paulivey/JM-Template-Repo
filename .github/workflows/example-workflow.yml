@@ -18,16 +18,16 @@ on:
         default: apply
 
 jobs:
-  ci:
-    name: CI
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo Placeholder for CI stuff
+#  ci:
+#    name: CI
+#    runs-on: ubuntu-latest
+#    steps:
+#      - run: echo Placeholder for CI stuff
   
   # MAKE SURE YOU CHANGE THE PATH!
   infra:
     name: Provision infrastructure
-    needs: ci
+ #   needs: ci
     # CHANGE THIS PATH!
     uses: iveylabs/JM-Template-Repo/.github/workflows/infra-template.yml@main
     with:

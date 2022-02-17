@@ -220,7 +220,7 @@ jobs:
     - name: Replace tokens
       uses: cschleiden/replace-tokens@v1.1
       with:
-        files: '["**/variables.tf, **/main.tf"]'
+        files: '["**/variables.tfvars, **/main.tf"]'
       env:
         APP_ENVIRONMENT: ${{ secrets.APP_ENVIRONMENT }}
         APP_NAME: ${{ inputs.APP_NAME }}

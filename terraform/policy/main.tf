@@ -17,13 +17,13 @@ module "policy_assignment" {
   source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/azure_policy_rg_assignment?ref=1.0.0"
 
   resource_group_name = "RG-${upper(var.environment)}-${upper(var.project)}-${upper(var.region_short)}-${upper(var.app_name)}-${var.app_suffix}"
-  tag_country         = var.tag_country
-  tag_environment     = var.tag_environment
-  tag_window          = var.tag_window
-  tag_sector          = var.tag_sector
-  tag_app_name        = var.tag_app_name
-  tag_cost_center     = var.tag_cost_center
-  tag_app_owner       = var.tag_app_owner
-  tag_classification  = var.tag_classification
-  tag_class           = var.tag_class
+  tag_country         = "${upper(var.tag_country))}"
+  tag_environment     = "${upper(var.tag_environment)}"
+  tag_window          = "${upper(var.tag_window)}"
+  tag_sector          = "${upper(var.tag_sector)}"
+  tag_app_name        = "${upper(var.app_name)}"
+  tag_cost_center     = "${upper(var.tag_cost_center)}"
+  tag_app_owner       = "${upper(var.tag_app_owner)}"
+  tag_classification  = "${upper(var.tag_classification)}"
+  tag_class           = "${upper(var.tag_class)}"
 }

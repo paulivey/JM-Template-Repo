@@ -127,6 +127,12 @@ jobs:
         TAG_APP_OWNER: ${{ inputs.TAG_APP_OWNER }}
         TAG_CLASSIFICATION: ${{ inputs.TAG_CLASSIFICATION }}
         TAG_SERVICE_CLASS: ${{ inputs.TAG_SERVICE_CLASS }}
+        
+    - name: DEBUG main
+      run: cat main.tf
+      
+    - name: DEBUG variables
+      run: cat variables.tfvars
 
 #    - name: Terraform init
 #      run: terraform init

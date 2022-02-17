@@ -20,7 +20,7 @@ module "create_resource_group" {
   location        = var.location
   owner_object_id = var.owner_object_id
     tags   = {
-    "Country"             = "${upper(var.tag_country))}"
+    "Country"             = "${upper(var.tag_country)}"
     "Environment"         = "${upper(var.tag_environment)}"
     "Maintenance Window"  = "${upper(var.tag_window)}"
     "Business Sector"     = "${upper(var.tag_sector)}"

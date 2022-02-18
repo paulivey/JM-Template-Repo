@@ -17,8 +17,14 @@ jobs:
           creds: ${{ secrets.AZURE_CREDS }}
           enable-AzPSSession: true
           
-      - name: Azure CLI Action
-        uses: Azure/cli@v1
+      - name: Azure PowerShell Action
+        uses: Azure/powershell@v1
         with:
-          # Specify the script here
-          inlineScript:  az ad user show --id AdeleV@iveymsft.onmicrosoft.com --query objectId -o tsv
+          # Specify the Az PowerShell script here.
+          inlineScript: Get-AzADUser -UserPrincipalName AdeleV@iveymsft.onmicrosoft.com
+          
+#       - name: Azure CLI Action
+#         uses: Azure/cli@v1
+#         with:
+#           # Specify the script here
+#           inlineScript:  az ad user show --id AdeleV@iveymsft.onmicrosoft.com --query objectId -o tsv

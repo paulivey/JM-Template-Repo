@@ -17,7 +17,6 @@ jobs:
       - name: Azure Login
         uses: Azure/login@v1.4.3
         with:
-          # Paste output of `az ad sp create-for-rbac` as value of secret variable: AZURE_CREDENTIALS
           creds: ${{ secrets.AZURE_CREDS }}
           enable-AzPSSession: true
           
@@ -27,9 +26,3 @@ jobs:
           # Specify the Az PowerShell script here.
           inlineScript: (Get-AzADUser -UserPrincipalName ${{ github.event.inputs.login }}).Id
           azPSVersion: latest
-          
-      - name: Azure CLI Action
-        uses: Azure/cli@v1
-        with:
-          # Specify the script here
-          inlineScript:  az ad user show --id ${{ github.event.inputs.login }}) --query objectId -o tsv

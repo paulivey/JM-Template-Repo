@@ -4,11 +4,12 @@ on:
   workflow_dispatch:
     inputs:
       GH_ENVIRONMENT:
-        description: Environment
-        type: choice
-        options:
-          - sandbox
-          - production
+        type: environment
+#         description: Environment
+#         type: choice
+#         options:
+#           - sandbox
+#           - production
         default: sandbox
       TERRAFORM_ACTION:
         description: Terraform action

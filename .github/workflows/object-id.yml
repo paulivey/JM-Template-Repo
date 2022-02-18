@@ -22,6 +22,7 @@ jobs:
         with:
           # Specify the Az PowerShell script here.
           inlineScript: Get-AzADUser -UserPrincipalName AdeleV@iveymsft.onmicrosoft.com
+          azPSVersion: latest
           
 #       - name: Azure CLI Action
 #         uses: Azure/cli@v1

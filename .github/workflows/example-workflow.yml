@@ -5,11 +5,6 @@ on:
     inputs:
       GH_ENVIRONMENT:
         type: environment
-#         description: Environment
-#         type: choice
-#         options:
-#           - sandbox
-#           - production
         default: sandbox
       TERRAFORM_ACTION:
         description: Terraform action

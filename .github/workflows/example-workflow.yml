@@ -5,7 +5,7 @@ on:
     inputs:
       GH_ENVIRONMENT:
         type: environment
-        default: sandbox
+        default: SBX
         description: Environment
       TERRAFORM_ACTION:
         description: Terraform action
@@ -38,7 +38,7 @@ jobs:
       APP_REGION_SHORT: "EU"
       APP_SUFFIX: "001"
       TAG_COUNTRY: "UK"
-      TAG_ENVIRONMENT: "${{ secrets.APP_ENVIRONMENT }}-DSOPS-EMEA"
+      TAG_ENVIRONMENT: "${{ github.event.inputs.GH_ENVIRONMENT }}-DSOPS-EMEA"
       TAG_MAINT_WINDOW: "NOT REQUIRED"
       TAG_SECTOR: "NONE"
       TAG_COST_CENTER: "012345"
@@ -48,7 +48,6 @@ jobs:
     secrets:
       POLICY_ASSIGNMENT_NAME: ${{ secrets.POLICY_ASSIGNMENT_NAME }}
       POLICY_DEFINITION_ID: ${{ secrets.POLICY_DEFINITION_ID }}
-      APP_ENVIRONMENT: ${{ secrets.APP_ENVIRONMENT }}
       OWNER_OBJECT_ID: ${{ secrets.OWNER_OBJECT_ID }}
       ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
       ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}

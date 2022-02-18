@@ -15,18 +15,10 @@ on:
           - destroy
         default: apply
 
-jobs:
-  # All the development work
-  ci:
-   name: CI
-   runs-on: ubuntu-latest
-   steps:
-     - run: echo Placeholder for CI stuff
-  
+jobs:  
   # MAKE SURE YOU CHANGE THE PATH!
   infra:
     name: Infra
-    needs: ci
     # CHANGE THIS PATH!
     uses: iveylabs/JM-TF-Modules/.github/workflows/infra-template.yml@main
     with:
@@ -55,5 +47,3 @@ jobs:
       ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
       AZURE_CREDS: ${{ secrets.AZURE_CREDS }}
       GH_PAT: ${{ secrets.GH_PAT }}
-
-# Deployment work

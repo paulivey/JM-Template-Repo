@@ -8,6 +8,7 @@ on:
         type: choice
         options:
           - sandbox
+          - production
         default: sandbox
       TERRAFORM_ACTION:
         description: Terraform action

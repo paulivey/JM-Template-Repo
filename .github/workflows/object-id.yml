@@ -25,11 +25,11 @@ jobs:
         uses: Azure/powershell@v1
         with:
           # Specify the Az PowerShell script here.
-          inlineScript: (Get-AzADUser -UserPrincipalName ${{ github.event.input.login }}).Id
+          inlineScript: (Get-AzADUser -UserPrincipalName ${{ github.event.inputs.login }}).Id
           azPSVersion: latest
           
       - name: Azure CLI Action
         uses: Azure/cli@v1
         with:
           # Specify the script here
-          inlineScript:  az ad user show --id ${{ github.event.input.login }}) --query objectId -o tsv
+          inlineScript:  az ad user show --id ${{ github.event.inputs.login }}) --query objectId -o tsv

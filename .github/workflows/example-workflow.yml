@@ -6,6 +6,7 @@ on:
       GH_ENVIRONMENT:
         type: environment
         default: sandbox
+        description: Environment
       TERRAFORM_ACTION:
         description: Terraform action
         type: choice

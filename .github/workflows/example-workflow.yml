@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       GH_ENVIRONMENT:
-        type: environment
+        type: environment # Using the environment type will auto-populate based on the environments created
         default: SBX
         description: Environment
       TERRAFORM_ACTION:

@@ -2,6 +2,10 @@ name: Extract object id
 
 on:
   workflow_dispatch:
+    inputs:
+      login:
+        type: text
+        description: Login email
   
 jobs:
   get-id:
@@ -21,11 +25,11 @@ jobs:
         uses: Azure/powershell@v1
         with:
           # Specify the Az PowerShell script here.
-          inlineScript: Get-AzADUser -UserPrincipalName AdeleV@iveymsft.onmicrosoft.com
+          inlineScript: (Get-AzADUser -UserPrincipalName ${{ github.event.input.login }}).Id
           azPSVersion: latest
           
       - name: Azure CLI Action
         uses: Azure/cli@v1
         with:
           # Specify the script here
-          inlineScript:  az ad user show --id AdeleV@iveymsft.onmicrosoft.com --query objectId -o tsv
+          inlineScript:  az ad user show --id ${{ github.event.input.login }}) --query objectId -o tsv

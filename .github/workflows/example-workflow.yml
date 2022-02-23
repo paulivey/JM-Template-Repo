@@ -14,6 +14,10 @@ on:
           - apply
           - destroy
         default: apply
+      UPN:
+        description: Contributor login email address
+        type: string
+        required: true
 
 jobs:  
   # MAKE SURE YOU CHANGE THE PATH!
@@ -24,6 +28,7 @@ jobs:
     with:
       GH_ENVIRONMENT: ${{ github.event.inputs.GH_ENVIRONMENT }}
       TERRAFORM_ACTION: ${{ github.event.inputs.TERRAFORM_ACTION }}
+      UPN: ${{ github.event.inputs.UPN }}
       APP_NAME: "bluehydrogenabacus"
       APP_PROJECT: "DSOPS"
       APP_LOCATION: "northeurope"
@@ -40,10 +45,8 @@ jobs:
     secrets:
       POLICY_ASSIGNMENT_NAME: ${{ secrets.POLICY_ASSIGNMENT_NAME }}
       POLICY_DEFINITION_ID: ${{ secrets.POLICY_DEFINITION_ID }}
-      OWNER_OBJECT_ID: ${{ secrets.OWNER_OBJECT_ID }}
       ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
       ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
       ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
       ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-      AZURE_CREDS: ${{ secrets.AZURE_CREDS }}
       GH_PAT: ${{ secrets.GH_PAT }}

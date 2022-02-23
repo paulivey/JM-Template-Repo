@@ -26,9 +26,9 @@ jobs:
           inlineScript: |
             $objectId = (Get-AzADUser -UserPrincipalName ${{ github.event.inputs.login }}).Id
             echo $objectId
-            echo "::set-output name=OBJECT_ID::$($objectId)"
+            echo "::set-output name=OBJECT_ID::Hello"
           azPSVersion: latest
-        id: OBJECT_ID
+        id: object_id
 
       - name: Read objectId
-        run: echo ${{ steps.get-id.outputs.OBJECT_ID }}
+        run: echo ${{ steps.object_id.outputs.OBJECT_ID }}

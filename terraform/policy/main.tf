@@ -14,7 +14,7 @@ terraform {
 
 # Set up Azure Policy assignment on the resource group
 module "policy_assignment" {
-  source = "git::https://github.com/iveylabs/JM-TF-Modules.git//modules/azure_policy_rg_assignment?ref=main"
+  source = "git::https://github.com/iveylabs/JM-Infra-Central.git//modules/azure_policy_rg_assignment?ref=main"
 
   resource_group_name = "RG-${upper(var.environment)}-${upper(var.project)}-${upper(var.region_short)}-${upper(var.app_name)}-${var.app_suffix}"
   tag_country         = "${upper(var.tag_country)}"

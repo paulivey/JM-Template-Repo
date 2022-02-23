@@ -23,6 +23,11 @@ jobs:
       - name: Azure PowerShell Action
         uses: Azure/powershell@v1
         with:
-          # Specify the Az PowerShell script here.
-          inlineScript: (Get-AzADUser -UserPrincipalName ${{ github.event.inputs.login }}).Id
+          inlineScript: |
+            $objectId = (Get-AzADUser -UserPrincipalName ${{ github.event.inputs.login }}).Id
+            echo "::set-output name=OBJECT_ID::$objectId"
           azPSVersion: latest
+        id: objectId
+
+      - name: Read objectId
+        run: echo ${{ steps.get-id.outputs.objectId }}

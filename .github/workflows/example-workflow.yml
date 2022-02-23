@@ -20,7 +20,7 @@ jobs:
   infra:
     name: Infra
     # CHANGE THIS PATH!
-    uses: iveylabs/JM-TF-Modules/.github/workflows/infra-template.yml@main
+    uses: iveylabs/JM-Infra-Central/.github/workflows/infra-template.yml@main
     with:
       GH_ENVIRONMENT: ${{ github.event.inputs.GH_ENVIRONMENT }}
       TERRAFORM_ACTION: ${{ github.event.inputs.TERRAFORM_ACTION }}

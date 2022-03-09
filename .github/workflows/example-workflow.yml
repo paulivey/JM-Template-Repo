@@ -1,4 +1,4 @@
-name: Example workflow ${{ inputs.TERRAFORM_ACTION }}
+name: Example workflow
 
 on:
   workflow_dispatch:

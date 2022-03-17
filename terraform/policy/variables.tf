@@ -2,6 +2,10 @@ variable "app_name" {
     type    = string
 }
 
+variable "policy_definition_id" {
+    type    = string
+}
+
 variable "environment"  {
     type    = string
 }

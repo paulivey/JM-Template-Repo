@@ -1,4 +1,5 @@
 app_name                = "#{APP_NAME}#"
+policy_definition_id    = "#{RG_POLICY_DEFINITION_ID}#"
 environment             = "#{APP_ENVIRONMENT}#"
 project                 = "#{APP_PROJECT}#"
 region_short            = "#{APP_REGION_SHORT}#"

@@ -43,8 +43,8 @@ jobs:
       TAG_CLASSIFICATION: "internal"
       TAG_SERVICE_CLASS: "platinum"
     secrets:
-      POLICY_ASSIGNMENT_NAME: ${{ secrets.POLICY_ASSIGNMENT_NAME }}
-      POLICY_DEFINITION_ID: ${{ secrets.POLICY_DEFINITION_ID }}
+      SUB_POLICY_ASSIGNMENT_NAME: ${{ secrets.SUB_POLICY_ASSIGNMENT_NAME }}
+      RG_POLICY_DEFINITION_ID: ${{ secrets.RG_POLICY_DEFINITION_ID }}
       ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
       ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
       ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}

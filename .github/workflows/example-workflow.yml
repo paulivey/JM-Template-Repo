@@ -17,7 +17,7 @@ on:
       UPN:
         description: Contributor login email address
         type: string
-        required: true
+        required: false
 
 jobs:  
   # MAKE SURE YOU CHANGE THE PATH!

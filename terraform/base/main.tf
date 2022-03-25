@@ -1,7 +1,3 @@
-provider "azurerm" {
-  features {}
-}
-
 # Backend state
 terraform {
   backend "azurerm" {
@@ -10,6 +6,17 @@ terraform {
     container_name       = "terraform"
     key                  = "#{APP_NAME}#-#{APP_ENVIRONMENT}#-base.terraform.tfstate"
   }
+  required_providers {
+    azurerm = {
+      source = "hashicorp/azurerm"
+      version = "=3.0.0"
+    }
+  }
+}
+
+# Configure the ARM provider
+provider "azurerm" {
+  features {}
 }
 
 # Create new resource group

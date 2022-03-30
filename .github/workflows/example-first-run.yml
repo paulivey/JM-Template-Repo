@@ -45,32 +45,38 @@ on:
 jobs:  
   # MAKE SURE YOU CHANGE THE PATH!
   infra:
-    name: Infra
-    # CHANGE THIS PATH!
-    uses: iveylabs/JM-Infra-Central/.github/workflows/infra-template.yml@main
-    with:
-      GH_ENVIRONMENT: ${{ github.event.inputs.GH_ENVIRONMENT }}
-      TERRAFORM_ACTION: ${{ github.event.inputs.TERRAFORM_ACTION }}
-      UPN: ${{ github.event.inputs.UPN }}
-      APP_NAME: ${{ github.event.inputs.APP_NAME }}
-      APP_PROJECT: ${{ github.event.inputs.APP_PROJECT }}
-      APP_LOCATION: ${{ github.event.inputs.APP_LOCATION }}
-      APP_REGION_SHORT: ${{ github.event.inputs.APP_REGION_SHORT }}
-      APP_SUFFIX: ${{ github.event.inputs.APP_SUFFIX }}
-      TAG_COUNTRY: ${{ github.event.inputs.TAG_COUNTRY }}
-      TAG_ENVIRONMENT: ${{ github.event.inputs.TAG_ENVIRONMENT }}
-      TAG_MAINT_WINDOW: ${{ github.event.inputs.TAG_MAINT_WINDOW }}
-      TAG_SECTOR: ${{ github.event.inputs.TAG_SECTOR }}
-      TAG_COST_CENTER: ${{ github.event.inputs.TAG_COST_CENTER }}
-      TAG_APP_OWNER: ${{ github.event.inputs.TAG_APP_OWNER }}
-      TAG_CLASSIFICATION: ${{ github.event.inputs.TAG_CLASSIFICATION }}
-      TAG_SERVICE_CLASS: ${{ github.event.inputs.TAG_SERVICE_CLASS }}
-    secrets:
-      SUB_POLICY_ASSIGNMENT_NAME: ${{ secrets.SUB_POLICY_ASSIGNMENT_NAME }}
-      RG_POLICY_DEFINITION_ID: ${{ secrets.RG_POLICY_DEFINITION_ID }}
-      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-      AZURE_CREDS: ${{ secrets.AZURE_CREDS }}
-      GH_PAT: ${{ secrets.GH_PAT }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test JSON inputs
+        run: |
+          echo "GH environment:"
+          echo "${{ toJson(github.event.inputs.JSON).vars.GH_ENVIRONMENT }}"
+#     name: Infra
+#     # CHANGE THIS PATH!
+#     uses: iveylabs/JM-Infra-Central/.github/workflows/infra-template.yml@main
+#     with:
+#       GH_ENVIRONMENT: ${{ github.event.inputs.GH_ENVIRONMENT }}
+#       TERRAFORM_ACTION: ${{ github.event.inputs.TERRAFORM_ACTION }}
+#       UPN: ${{ github.event.inputs.UPN }}
+#       APP_NAME: ${{ github.event.inputs.APP_NAME }}
+#       APP_PROJECT: ${{ github.event.inputs.APP_PROJECT }}
+#       APP_LOCATION: ${{ github.event.inputs.APP_LOCATION }}
+#       APP_REGION_SHORT: ${{ github.event.inputs.APP_REGION_SHORT }}
+#       APP_SUFFIX: ${{ github.event.inputs.APP_SUFFIX }}
+#       TAG_COUNTRY: ${{ github.event.inputs.TAG_COUNTRY }}
+#       TAG_ENVIRONMENT: ${{ github.event.inputs.TAG_ENVIRONMENT }}
+#       TAG_MAINT_WINDOW: ${{ github.event.inputs.TAG_MAINT_WINDOW }}
+#       TAG_SECTOR: ${{ github.event.inputs.TAG_SECTOR }}
+#       TAG_COST_CENTER: ${{ github.event.inputs.TAG_COST_CENTER }}
+#       TAG_APP_OWNER: ${{ github.event.inputs.TAG_APP_OWNER }}
+#       TAG_CLASSIFICATION: ${{ github.event.inputs.TAG_CLASSIFICATION }}
+#       TAG_SERVICE_CLASS: ${{ github.event.inputs.TAG_SERVICE_CLASS }}
+#     secrets:
+#       SUB_POLICY_ASSIGNMENT_NAME: ${{ secrets.SUB_POLICY_ASSIGNMENT_NAME }}
+#       RG_POLICY_DEFINITION_ID: ${{ secrets.RG_POLICY_DEFINITION_ID }}
+#       ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+#       ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+#       ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+#       ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+#       AZURE_CREDS: ${{ secrets.AZURE_CREDS }}
+#       GH_PAT: ${{ secrets.GH_PAT }}

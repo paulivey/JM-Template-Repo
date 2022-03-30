@@ -30,34 +30,6 @@ variable "address_prefixes" {
     type    = list(string)
 }
 
-variable "tag_country" {
-    type    = string
-}
-
-variable "tag_environment" {
-    type    = string
-}
-
-variable "tag_window" {
-    type    = string
-}
-
-variable "tag_sector" {
-    type    = string
-}
-
-variable "tag_cost_center" {
-    type    = string
-}
-
-variable "tag_app_owner" {
-    type    = string
-}
-
-variable "tag_classification" {
-    type    = string
-}
-
-variable "tag_class" {
-    type    = string
+variable "tags" {
+    type    = map(string)
 }

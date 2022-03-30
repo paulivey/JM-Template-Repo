@@ -26,17 +26,7 @@ module "create_resource_group" {
   rg_name         = "RG-${upper(var.environment)}-${upper(var.project)}-${upper(var.region_short)}-${upper(var.app_name)}-${var.app_suffix}"
   location        = var.location
   owner_object_id = var.owner_object_id
-    tags   = {
-    "Country"             = "${upper(var.tag_country)}"
-    "Environment"         = "${upper(var.tag_environment)}"
-    "Maintenance Window"  = "${upper(var.tag_window)}"
-    "Business Sector"     = "${upper(var.tag_sector)}"
-    "Application Name"    = "${upper(var.app_name)}"
-    "Cost Center"         = "${upper(var.tag_cost_center)}"
-    "Application Owner"   = "${upper(var.tag_app_owner)}"
-    "Data Classification" = "${upper(var.tag_classification)}"
-    "Service Class"       = "${upper(var.tag_class)}"
-  }
+    tags          = var.tags
 }
 
 # Create app service web app + service plan

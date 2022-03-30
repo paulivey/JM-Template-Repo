@@ -52,7 +52,7 @@ jobs:
       - name: Test JSON inputs
         run: |
           echo "GH environment:"
-          echo "${{ toJson(github.event.inputs.JSON).vars.GH_ENVIRONMENT }}"
+          echo "${{ toJson(github.event.inputs.JSON)}}"
 #     name: Infra
 #     # CHANGE THIS PATH!
 #     uses: iveylabs/JM-Infra-Central/.github/workflows/infra-template.yml@main

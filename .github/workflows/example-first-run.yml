@@ -4,43 +4,45 @@ name: Example first run workflow
 on:
   workflow_dispatch:
     inputs:
-      # Setting all types as string to avoid potential complications when running via CLI
-      GH_ENVIRONMENT:
-        type: string
-        default: SBX
-      TERRAFORM_ACTION:
-        type: string
-        default: apply
-      UPN:
-        description: Contributor login email address
-        type: string
-        required: false
-      APP_NAME:
-        type: string
-      APP_PROJECT:
-        type: string
-      APP_LOCATION:
-        type: string
-      APP_REGION_SHORT:
-        type: string
-      APP_SUFFIX:
-        type: string
-      TAG_COUNTRY:
-        type: string
-      TAG_ENVIRONMENT:
-        type: string
-      TAG_MAINT_WINDOW:
-        type: string
-      TAG_SECTOR:
-        type: string
-      TAG_COST_CENTER:
-        type: string
-      TAG_APP_OWNER:
-        type: string
-      TAG_CLASSIFICATION:
-        type: string
-      TAG_SERVICE_CLASS:
-        type: string
+#       # Setting all types as text to avoid potential complications when running via CLI
+#       GH_ENVIRONMENT:
+#         type: text
+#         default: SBX
+#       TERRAFORM_ACTION:
+#         type: text
+#         default: apply
+#       UPN:
+#         description: Contributor login email address
+#         type: text
+#         required: false
+#       APP_NAME:
+#         type: text
+#       APP_PROJECT:
+#         type: text
+#       APP_LOCATION:
+#         type: text
+#       APP_REGION_SHORT:
+#         type: text
+#       APP_SUFFIX:
+#         type: text
+#       TAG_COUNTRY:
+#         type: text
+#       TAG_ENVIRONMENT:
+#         type: text
+#       TAG_MAINT_WINDOW:
+#         type: text
+#       TAG_SECTOR:
+#         type: text
+#       TAG_COST_CENTER:
+#         type: text
+#       TAG_APP_OWNER:
+#         type: text
+#       TAG_CLASSIFICATION:
+#         type: text
+#       TAG_SERVICE_CLASS:
+#         type: text
+      JSON:
+        type: text
 
 jobs:  
   # MAKE SURE YOU CHANGE THE PATH!

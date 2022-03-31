@@ -51,7 +51,7 @@ jobs:
     steps:
       - name: Test vars JSON inputs
         run: |
-          $test = ${{ github.event.inputs.vars }}
+          $test = @"${{ github.event.inputs.vars }}"@
           $test.ToString()
         shell: pwsh
         

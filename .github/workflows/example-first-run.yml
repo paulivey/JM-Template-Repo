@@ -51,7 +51,7 @@ jobs:
     steps:
       - name: Test vars JSON inputs
         run: |
-          $test = ${{ github.event.inputs.vars }} | ConvertTo-Json
+          $test = ${{ github.event.inputs.vars }} | ConvertTo-Json -Depth 10
           Write-Host $test
         shell: pwsh
 #     name: Infra

@@ -52,7 +52,7 @@ jobs:
       - name: Test vars JSON inputs
         run: |
           Write-Host "toJson (github event inputs vars):"
-          Write-Host "${{ toJson(github.event.inputs.vars) }}"
+          Write-Host ${{ toJson(github.event.inputs.vars) }}
  #         Write-Host "toJson (github event inputs vars UPN):"
  #         Write-Host "${{ toJson(github.event.inputs.vars.UPN) }}"
  #         Write-Host "toJson (github event inputs vars)UPN:"

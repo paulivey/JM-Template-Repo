@@ -52,7 +52,7 @@ jobs:
       - name: Test vars JSON inputs
         run: |
           $test = ${{ github.event.inputs.vars }}
-          $test
+          $test.GetType()
         shell: pwsh
         
 #     name: Infra

@@ -55,8 +55,8 @@ jobs:
           Write-Host ${{ toJson(github.event.inputs.vars) }}
           Write-Host "toJson (github event inputs vars UPN):"
           Write-Host "${{ toJson(github.event.inputs.vars.UPN) }}"
- #         Write-Host "toJson (github event inputs vars)UPN:"
- #         Write-Host "${{ toJson(github.event.inputs.vars).UPN }}"
+          Write-Host "toJson (github event inputs vars)UPN:"
+          Write-Host "${{ toJson(github.event.inputs.vars).UPN }}"
  #         Write-Host "fromJson (github event inputs vars UPN):"
  #         Write-Host "${{ fromJson(github.event.inputs.vars.UPN) }}"
  #         Write-Host "fromJson (github event inputs vars)UPN:"

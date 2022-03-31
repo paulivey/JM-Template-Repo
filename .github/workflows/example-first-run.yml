@@ -51,8 +51,8 @@ jobs:
     steps:
       - name: Test vars JSON inputs
         run: |
-          $test = @"${{ github.event.inputs.vars }}"@
-          $test.ToString()
+          $test = "${{ github.event.inputs.vars }}"
+          $test
         shell: pwsh
         
 #     name: Infra

@@ -51,14 +51,14 @@ jobs:
     steps:
       - name: Test vars JSON inputs
         run: |
+          Write-Host "github event inputs vars:"
+          Write-Host ${{ github.event.inputs.vars }}
           Write-Host "toJson (github event inputs vars):"
           Write-Host ${{ toJson(github.event.inputs.vars) }}
           Write-Host "toJson (github event inputs vars UPN):"
           Write-Host "${{ toJson(github.event.inputs.vars.UPN) }}"
           Write-Host "toJson (github event inputs vars)UPN:"
           Write-Host "${{ toJson(github.event.inputs.vars).UPN }}"
-          Write-Host "fromJson (github event inputs vars)UPN:"
-          Write-Host "${{ fromJson(github.event.inputs.vars).UPN }}"
         shell: pwsh
 #     name: Infra
 #     # CHANGE THIS PATH!

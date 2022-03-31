@@ -51,8 +51,7 @@ jobs:
     steps:
       - name: Test JSON inputs
         run: |
-          Write-Host "GH environment:"
-          Write-Host "${{ toJson(github.event.inputs.JSON)}}"
+          Write-Host "${{ github.event.inputs.JSON }}"
         shell: pwsh
 #     name: Infra
 #     # CHANGE THIS PATH!

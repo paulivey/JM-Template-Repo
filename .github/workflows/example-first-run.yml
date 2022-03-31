@@ -53,8 +53,8 @@ jobs:
         run: |
           Write-Host "github event inputs vars:"
           ${{ github.event.inputs.vars }}
-          Write-Host "github event inputs vars.UPN:"
-          ${{ github.event.inputs.vars.UPN }}
+          Write-Host "toJson (github event inputs vars).UPN:"
+          ${{ toJson(github.event.inputs.vars).UPN) }}
         shell: pwsh
 #     name: Infra
 #     # CHANGE THIS PATH!

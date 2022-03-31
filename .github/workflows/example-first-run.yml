@@ -57,10 +57,8 @@ jobs:
           Write-Host "${{ toJson(github.event.inputs.vars.UPN) }}"
           Write-Host "toJson (github event inputs vars)UPN:"
           Write-Host "${{ toJson(github.event.inputs.vars).UPN }}"
-          Write-Host "fromJson (github event inputs vars UPN):"
-          Write-Host "${{ fromJson(github.event.inputs.vars.UPN) }}"
- #         Write-Host "fromJson (github event inputs vars)UPN:"
- #         Write-Host "${{ fromJson(github.event.inputs.vars).UPN }}"
+          Write-Host "fromJson (github event inputs vars)UPN:"
+          Write-Host "${{ fromJson(github.event.inputs.vars).UPN }}"
         shell: pwsh
 #     name: Infra
 #     # CHANGE THIS PATH!

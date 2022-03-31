@@ -41,7 +41,7 @@ on:
 #         type: text
 #       TAG_SERVICE_CLASS:
 #         type: text
-      JSON:
+      vars:
         type: text
 
 jobs:  
@@ -49,9 +49,9 @@ jobs:
   infra:
     runs-on: ubuntu-latest
     steps:
-      - name: Test JSON inputs
+      - name: Test vars JSON inputs
         run: |
-          Write-Host "${{ github.event.inputs.JSON }}"
+          Write-Host "${{ github.event.inputs.vars }}"
         shell: pwsh
 #     name: Infra
 #     # CHANGE THIS PATH!

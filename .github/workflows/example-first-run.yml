@@ -51,7 +51,7 @@ jobs:
     steps:
       - name: Test vars JSON inputs
         run: |
-          Write-Host "${{ github.event.inputs.vars }}"
+          Write-Host "${{ github.event.inputs.vars.UPN }}"
         shell: pwsh
 #     name: Infra
 #     # CHANGE THIS PATH!

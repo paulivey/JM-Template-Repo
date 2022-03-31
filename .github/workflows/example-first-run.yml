@@ -51,9 +51,16 @@ jobs:
     steps:
       - name: Test vars JSON inputs
         run: |
-          $test = ${{ github.event.inputs.vars }} | ConvertTo-Json -Depth 10
+          $test = ${{ github.event.inputs.vars }} | ConvertTo-Json -Depth 100
           Write-Host $test
         shell: pwsh
+        
+      - name: Test vars JSON inputs (no depth)
+        run: |
+          $test = ${{ github.event.inputs.vars }} | ConvertTo-Json
+          Write-Host $test
+        shell: pwsh
+        if: failure()
 #     name: Infra
 #     # CHANGE THIS PATH!
 #     uses: iveylabs/JM-Infra-Central/.github/workflows/infra-template.yml@main
